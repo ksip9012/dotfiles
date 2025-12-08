@@ -1,0 +1,5 @@
+[tools]
+python = ['latest', '3.11.4', '3.11.5', '3.12.1']
+poetry = ['latest', '1.5.1', '1.6.1', '1.7.1']
+nodejs = ['latest', '21.4.0']
+node = "25.0.0"
