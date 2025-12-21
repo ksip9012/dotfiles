@@ -4,7 +4,7 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
-config.color_scheme = 'Sea Shells (Gogh)'
+config.color_scheme = 'Astrodark (Goth)'
 config.window_background_opacity = 0.85
 
 -- ウィンドウの初期サイズ設定
