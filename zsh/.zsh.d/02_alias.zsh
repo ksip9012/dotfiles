@@ -31,18 +31,9 @@ alias mbrew="_brew"
 
 # VS code
 
-function _workspace() {
-  local workspace_path="${WORKSPACE_FILE_PATH}"
-
-  # ワークスペースファイルの存在チェック（エラー時にわかりやすいメッセージを出す）
-  if [ ! -f "$workspace_path" ]; then
-    echo "エラー: ワークスペースファイルが見つかりません。" >&2
-    echo "パス: $workspace_path" >&2
-    return 1
-  fi
-
-  # 新規ウィンドウで開き (-n)、ターミナルをブロックしない (&)
-  code -n "$workspace_path" &
+function _gtd() {
+  cd ~/Documents/life
+  code .
 }
-alias gtd="_workspace"
+alias gtd="_gtd"
 

@@ -1,7 +1,9 @@
 {
   "editor.renderWhitespace": "all",
   "editor.tabSize": 2,
+  "editor.fontFamily": "HackGen35",
   "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.fontFamily": "FiraCode Nerd Font Mono",
   "workbench.startupEditor": "none",
   "window.zoomLevel": 2,
   "explorer.confirmDragAndDrop": false,
