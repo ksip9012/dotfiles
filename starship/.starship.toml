@@ -1,12 +1,17 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# ============================================================
+# CORE SETTINGS
+# ============================================================
 format = """
 [ ](mauve)\
+$os\
 $sudo\
 $time\
 $directory\
 $git_branch\
 $git_status\
+$all\
 $status\
 $cmd_duration\
 $line_break
@@ -14,6 +19,133 @@ $character"""
 
 palette = 'catppuccin_mocha'
 
+# ============================================================
+# SHELL UI
+# ============================================================
+[character]
+success_symbol = '[❯](bold fg:sapphire)'
+error_symbol = '[❯](bold fg:red)'
+disabled = false
+
+[line_break]
+disabled = true
+
+[status]
+style = "fg:green"
+format = '[$symbol]($style)'
+success_symbol = "[  ]($style)"
+symbol = "[  $status $common_meaning](bold fg:red)"
+disabled = false
+
+[time]
+time_format = "%T"
+style = "lavender"
+format = '[ $time |]($style)'
+disabled = false
+
+[sudo]
+style = 'mauve'
+format = "[]($style)"
+disabled = false
+
+# ============================================================
+# SYSTEM / HARDWARE
+# ============================================================
+[battery]
+full_symbol = "󰁹 "
+charging_symbol = "󰂄 "
+discharging_symbol = "󰂃 "
+format = "[$symbol$percentage]($style) "
+
+[[battery.display]]
+threshold = 30
+style = "bold red"
+
+[cmd_duration]
+min_time = 700
+show_milliseconds = true
+style = "fg:rosewater"
+format = "[ 󰾆 $duration ]($style)"
+show_notifications = true
+min_time_to_notify = 45000
+
+# ============================================================
+# DIRECTORY & GIT
+# ============================================================
+[directory]
+style = "blue"
+format = "[  $path |]($style)"
+truncation_length = 3
+truncate_to_repo = true
+truncation_symbol = "…/"
+read_only = " 󰌾"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "sapphire"
+format = '[ $symbol $branch ]($style)'
+
+[git_status]
+style = "sapphire"
+format = '[$conflicted$deleted$renamed$modified$staged$untracked$ahead_behind |]($style)'
+untracked = "? "
+stashed = "$ "
+modified = "! "
+staged = "+ "
+renamed = "» "
+deleted = "✘ "
+ahead = "⇡ "
+behind = "⇣ "
+diverged = "⇕ "
+up_to_date = '✓ '
+
+# ============================================================
+# LANGUAGES & TOOLS (Alphabetical Order)
+# ============================================================
+[c]
+symbol = " "
+style = "fg:teal"
+format = '[ $symbol( $version) |]($style)'
+
+[docker_context]
+symbol = ""
+style = "bg:teal"
+format = '[[ $symbol( $context) ](fg:crust bg:sapphire)]($style)'
+
+[golang]
+symbol = ""
+style = "fg:teal"
+format = '[ $symbol( $version) |]($style)'
+
+[nodejs]
+symbol = ""
+style = "fg:teal"
+format = '[ $symbol( $version) |]($style)'
+
+[php]
+symbol = ""
+style = "fg:teal"
+format = '[ $symbol( $version) |]($style)'
+
+[python]
+symbol = ""
+style = "bg:surface1 fg:yellow"
+format = '[ $symbol( $version) ( $virtualenv)|]($style)'
+
+[zig]
+symbol = ""
+style = "fg:teal"
+format = '[ $symbol( $version) |]($style)'
+
+# ============================================================
+# COLOR PALETTES
+# ============================================================
 [palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"
 flamingo = "#f2cdcd"
@@ -41,104 +173,3 @@ surface0 = "#313244"
 base = "#1e1e2e"
 mantle = "#181825"
 crust = "#11111b"
-
-[sudo]
-style = 'mauve'
-format = "[]($style)"
-disabled = false
-
-[time]
-disabled = false
-time_format = "%T"
-style = "lavender"
-format = '[ $time |]($style)'
-
-[directory]
-style = "blue"
-format = "[  $path |]($style)"
-truncation_length = 3
-truncation_symbol = "…/"
-
-[directory.substitutions]
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = "󰝚 "
-"Pictures" = " "
-
-[git_branch]
-symbol = ""
-style = "sapphire"
-format = '[ $symbol $branch ]($style)'
-
-[git_status]
-style = "sapphire"
-format = '[$conflicted$deleted$renamed$modified$staged$untracked$ahead_behind |]($style)'
-untracked = "?"
-stashed = "$"
-modified = "!"
-staged = "+"
-renamed = "»"
-deleted = "✘"
-ahead = "⇡"
-behind = "⇣"
-diverged = "⇕"
-up_to_date = '✓'
-
-[cmd_duration]
-show_milliseconds = true
-format = "[ 󰾆 $duration ]($style)"
-style = "fg:rosewater"
-disabled = false
-show_notifications = true
-min_time_to_notify = 45000
-min_time = 700
-
-[status]
-style = "fg:green"
-format = '[$symbol]($style)'
-disabled = false
-success_symbol = "[  ]($style)"
-symbol = "[  $status $common_meaning](bold fg:red)"
-
-[character]
-disabled = false
-success_symbol = '[❯](bold fg:sapphire)'
-error_symbol = '[❯](bold fg:red)'
-
-[line_break]
-disabled = true
-
-[c]
-symbol = " "
-style = "fg:teal"
-format = '[ $symbol( $version) |]($style)'
-
-[golang]
-symbol = ""
-style = "fg:teal"
-format = '[ $symbol( $version) |]($style)'
-
-[nodejs]
-symbol = ""
-style = "fg:teal"
-format = '[ $symbol( $version) |]($style)'
-
-[php]
-symbol = ""
-style = "fg:teal"
-format = '[ $symbol( $version) |]($style)'
-
-[python]
-symbol = ""
-style = "fg:teal"
-format = '[ $symbol( $version) ( $virtualenv)|]($style)'
-
-[zig]
-symbol = ""
-style = "fg:teal"
-format = '[ $symbol( $version) |]($style)'
-
-[docker_context]
-symbol = ""
-style = "bg:teal"
-format = '[[ $symbol( $context) ](fg:crust bg:sapphire)]($style)'
