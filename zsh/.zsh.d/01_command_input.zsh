@@ -15,7 +15,7 @@ setopt extended_glob
 # cd コマンドを省略
 setopt auto_cd
 # 履歴ファイル（.zsh_history）の場所と最大行数を設定
-HISTFILE="$HOME/.zsh_history"
+HISTFILE="$HOME/.local/state/zsh/history"
 HISTSIZE=100000  # ターミナルセッションメモリ内の履歴最大数
 SAVEHIST=100000  # 履歴ファイルに保存する最大行数
 

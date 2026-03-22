@@ -1,4 +1,7 @@
 ###########################################################
+# homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+###########################################################
 # 分割ファイルの読み込みセクション
 
 # 読み込むディレクトリ指定
@@ -10,11 +13,12 @@ for file in ${ZSH_DIR}/*.zsh(N^s); do
   done
 fi
 ###########################################################
-# compinit を実行する
-autoload -Uz compinit && compinit -i
+# Zsh completion cache path (used in .zshrc)
+
+export ZCOMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 ###########################################################
-# homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# compinit を実行する
+autoload -Uz compinit && compinit -i -d "$ZCOMPDUMP"
 ###########################################################
 # mise
 eval "$(mise activate zsh)"
@@ -25,9 +29,6 @@ eval "$(sheldon source)"
 # beep
 setopt no_beep
 setopt nolistbeep
-###########################################################
-# alias
-alias ls="lsd -al"
 ###########################################################
 # starship - put last part of .zshrc
 eval "$(starship init zsh)"

@@ -13,12 +13,18 @@ echo "Home directory:     $HOME_DIR"
 echo ""
 
 # --- Helper function for creating symlinks ---
-# $1: source file in dotfiles repo
-# $2: target file in home directory
+# $1: source file/dir in dotfiles repo
+# $2: target file/dir in home directory
 link_file() {
     local source_path="$1"
     local target_path="$2"
     local target_dir
+
+    # Check if source exists
+    if [ ! -e "$source_path" ]; then
+        echo "⚠️ Skipping: Source $source_path does not exist."
+        return
+    fi
 
     # Create parent directory of target if it doesn't exist
     target_dir=$(dirname "$target_path")
@@ -32,51 +38,52 @@ link_file() {
     ln -sfnv "$source_path" "$target_path"
 }
 
-# Homebrewパッケージのインストール（例: macOSの場合）
+# --- Homebrew Setup ---
 if command -v brew >/dev/null 2>&1; then
-    echo ""
-    echo "📦 Installing Homebrew packages via Brewfile..."
-    # Brewfileが .dotfiles ディレクトリ直下にあると仮定
-    brew bundle --file="$DOTFILES_DIR/Brewfile"
+    if [ -f "$DOTFILES_DIR/Brewfile" ]; then
+        echo "📦 Installing Homebrew packages via Brewfile..."
+        brew bundle --file="$DOTFILES_DIR/Brewfile"
+    fi
 else
     echo "⚠️ Homebrew not found. Skipping package installation."
 fi
 
 # --- Link configuration files ---
 
-echo "Linking configuration files..."
+echo ""
+echo "🔗 Linking configuration files..."
 
 # Zsh
 link_file "$DOTFILES_DIR/zsh/.zshrc"              "$HOME_DIR/.zshrc"
+link_file "$DOTFILES_DIR/zsh/.zsh.d"              "$HOME_DIR/.zsh.d"
+
+# Git
+link_file "$DOTFILES_DIR/git/.gitconfig"         "$HOME_DIR/.gitconfig"
 
 # WezTerm
 link_file "$DOTFILES_DIR/wezterm/.wezterm.lua"      "$HOME_DIR/.wezterm.lua"
 
 # Starship
-# Note: .zshrc points to the file in dotfiles repo directly, but creating a symlink
-# is a more robust method for other shells or if the env var is not set.
 link_file "$DOTFILES_DIR/starship/.starship.toml"  "$HOME_DIR/.config/starship.toml"
 
-# Mise
-link_file "$DOTFILES_DIR/mise/config.toml"         "$HOME_DIR/.config/mise/config.toml"
+# Directory-based configurations (Modern Tools)
+link_file "$DOTFILES_DIR/mise"                     "$HOME_DIR/.config/mise"
+link_file "$DOTFILES_DIR/sheldon"                  "$HOME_DIR/.config/sheldon"
+link_file "$DOTFILES_DIR/raycast"                  "$HOME_DIR/.config/raycast"
+link_file "$DOTFILES_DIR/nvim"                     "$HOME_DIR/.config/nvim"
 
-# Sheldon
-link_file "$DOTFILES_DIR/sheldon/plugins.toml"     "$HOME_DIR/.config/sheldon/plugins.toml"
+# Newsboat (If exists)
+link_file "$DOTFILES_DIR/newsboat"                 "$HOME_DIR/.newsboat"
 
-# Newsboat
-link_file "$DOTFILES_DIR/newsboat/config"          "$HOME_DIR/.newsboat/config"
-link_file "$DOTFILES_DIR/newsboat/urls"            "$HOME_DIR/.newsboat/urls"
-
-# nvim
-link_file "$DOTFILES_DIR/nvim" "$HOME_DIR/.config/nvim"
-
-# Visual Studio Code (macOS only)
+# --- Visual Studio Code (macOS only) ---
 if [[ "$(uname)" == "Darwin" ]]; then
-    echo ""
-    echo "Linking Visual Studio Code settings (macOS)..."
     VSCODE_USER_DIR="$HOME_DIR/Library/Application Support/Code/User"
-    link_file "$DOTFILES_DIR/.vscode/settings.json"    "$VSCODE_USER_DIR/settings.json"
-    link_file "$DOTFILES_DIR/.vscode/keybindings.json" "$VSCODE_USER_DIR/keybindings.json"
+    if [ -d "$DOTFILES_DIR/.vscode" ]; then
+        echo ""
+        echo "🖥️ Linking Visual Studio Code settings (macOS)..."
+        link_file "$DOTFILES_DIR/.vscode/settings.json"    "$VSCODE_USER_DIR/settings.json"
+        link_file "$DOTFILES_DIR/.vscode/keybindings.json" "$VSCODE_USER_DIR/keybindings.json"
+    fi
 fi
 
 echo ""

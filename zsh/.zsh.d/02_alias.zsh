@@ -4,7 +4,7 @@
 
 function _brew() {
   # ログファイルの設定
-  local log_dir="$HOME/.brew_logs"
+  local log_dir="${XDG_CACHE_HOME:-$HOME/.cache}/Homebrew/Logs"
   mkdir -p "$log_dir"
 
   local date_str=$(date +%Y%m%d_%H%M%S)
@@ -24,7 +24,7 @@ function _brew() {
   echo "=== Maintenance Start: $(date) ===" > "$log_file"
 
   # ヘルパー関数: 進捗の可視化
-  run_step() {
+  __brew_run_step() {
     echo -e "\n${blue}==> $1...${reset}"
     if eval "$2" 2>&1 | tee -a "$log_file"; then
       return 0
@@ -35,19 +35,19 @@ function _brew() {
 
   # 1. Homebrew 本体とグローバルツールの更新
   # これにより git, docker, mise(本体), uv(本体) などが最新になります
-  run_step "Homebrew 定義の更新" "brew update"
-  run_step "グローバルツールのアップグレード" "brew upgrade"
-  run_step "アプリ(Cask)の更新" "brew upgrade --cask --greedy"
+  __brew_run_step "Homebrew 定義の更新" "brew update"
+  __brew_run_step "グローバルツールのアップグレード" "brew upgrade"
+  __brew_run_step "アプリ(Cask)の更新" "brew upgrade --cask --greedy"
 
   # 2. 徹底的な掃除
   # 不要な依存関係(lib...)と古いキャッシュを削除してディスクを空けます
-  run_step "不要な依存関係の自動削除" "brew autoremove"
-  run_step "古いキャッシュとバージョンの削除" "brew cleanup"
+  __brew_run_step "不要な依存関係の自動削除" "brew autoremove"
+  __brew_run_step "古いキャッシュとバージョンの削除" "brew cleanup"
 
   # 3. 状態の保存と健康診断
   # 最後に doctor を行うことで、今の構成に不備がないか確認します
-  run_step "システム診断" "brew doctor"
-  run_step "Brewfile の更新" "brew bundle dump --file=\"$HOME/.dotfiles/Brewfile\" --force"
+  __brew_run_step "システム診断" "brew doctor"
+  __brew_run_step "Brewfile の更新" "brew bundle dump --file=\"$HOME/.dotfiles/Brewfile\" --force"
 
   # 4. 30日以上前の野ログファイルを削除
   find "$log_dir" -name "brew_*.log" -type f -mtime +30 -delete
@@ -71,3 +71,7 @@ function _gtd() {
 }
 alias gtd="_gtd"
 
+# eza
+alias ls='eza --icons --git'
+alias ll='eza -la --icons --git --time-style=relative'
+alias lt='eza --tree --icons --level=2'

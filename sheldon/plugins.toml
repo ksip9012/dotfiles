@@ -20,19 +20,9 @@ defer = "{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}"
 github = "romkatv/zsh-defer"
 apply = ["source"]
 
-[plugins.zsh-autocomplete]
-# 自動補完
-github = "marlonrichert/zsh-autocomplete"
-apply = ["defer"]
-
 [plugins.F-Sy-H]
 # コマンドの色付け
-github = "zdharma/fast-syntax-highlighting"
-apply = ["defer"]
-
-[plugins.zsh-z]
-# フォルダ移動
-github = "agkozak/zsh-z"
+github = "zdharma-continuum/fast-syntax-highlighting"
 apply = ["defer"]
 
 [plugins.autopair]

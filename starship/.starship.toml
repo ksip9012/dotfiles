@@ -4,21 +4,11 @@
 # CORE SETTINGS
 # ============================================================
 format = """
-[ ](mauve)\
-$os\
-$sudo\
-$time\
-$directory\
-$git_branch\
-$git_status\
-$all\
-$status\
-$cmd_duration\
-$line_break
-$character"""
+[ ](mauve)$os$sudo $directory$status$cmd_duration $time
+$git_branch $git_status $python
+$character """
 
 palette = 'catppuccin_mocha'
-
 # ============================================================
 # SHELL UI
 # ============================================================
@@ -38,14 +28,14 @@ symbol = "[  $status $common_meaning](bold fg:red)"
 disabled = false
 
 [time]
-time_format = "%T"
+time_format = "%y-%m-%d(%a) %R"
 style = "lavender"
-format = '[ $time |]($style)'
+format = '[ $time ]($style)'
 disabled = false
 
 [sudo]
 style = 'mauve'
-format = "[]($style)"
+format = "[󰆥 ]($style)"
 disabled = false
 
 # ============================================================
@@ -69,6 +59,10 @@ format = "[ 󰾆 $duration ]($style)"
 show_notifications = true
 min_time_to_notify = 45000
 
+[os]
+disabled = false
+style = "fg:mauve"
+
 # ============================================================
 # DIRECTORY & GIT
 # ============================================================
@@ -89,11 +83,11 @@ read_only = " 󰌾"
 [git_branch]
 symbol = ""
 style = "sapphire"
-format = '[ $symbol $branch ]($style)'
+format = '[$symbol $branch ]($style)'
 
 [git_status]
 style = "sapphire"
-format = '[$conflicted$deleted$renamed$modified$staged$untracked$ahead_behind |]($style)'
+format = '[$conflicted$deleted$renamed$modified$staged$untracked$ahead_behind]($style)'
 untracked = "? "
 stashed = "$ "
 modified = "! "
@@ -115,8 +109,8 @@ format = '[ $symbol( $version) |]($style)'
 
 [docker_context]
 symbol = ""
-style = "bg:teal"
-format = '[[ $symbol( $context) ](fg:crust bg:sapphire)]($style)'
+style = "fg:teal"
+format = '[ $symbol( $context) |]($style)'
 
 [golang]
 symbol = ""
@@ -137,11 +131,6 @@ format = '[ $symbol( $version) |]($style)'
 symbol = ""
 style = "bg:surface1 fg:yellow"
 format = '[ $symbol( $version) ( $virtualenv)|]($style)'
-
-[zig]
-symbol = ""
-style = "fg:teal"
-format = '[ $symbol( $version) |]($style)'
 
 # ============================================================
 # COLOR PALETTES

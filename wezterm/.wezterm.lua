@@ -5,24 +5,19 @@ if wezterm.config_builder then
 end
 
 -- 見た目の設定
-config.color_scheme = 'Astrodark (Goth)'
+config.color_scheme = 'Catppuccin Mocha'
 config.window_background_opacity = 0.85
+config.macos_window_background_blur = 20
 config.window_decorations = "RESIZE"
 config.window_padding = { left = 10, right = 10, top = 10, bottom = 10 }
 
 -- ウィンドウの初期サイズ設定
-config.initial_cols = 80
-config.initial_rows = 20
+config.initial_cols = 220
+config.initial_rows = 50
 
 -- タブバーの設定
 config.hide_tab_bar_if_only_one_tab = false
 config.use_fancy_tab_bar = false
-wezterm.on("update-right-status", function(window, pane)
-  window:set_right_status(wezterm.format({
-    { Foreground = { AnsiColor = "Aqua" }},
-    { Text = wezterm.strftime("%Y-%m-%d %H:%M ")}
-  }))
-end)
 
 -- フォント関係の設定
 config.font = wezterm.font("FiraCode Nerd Font")
@@ -41,16 +36,16 @@ config.keys = {
   -- Cmd + Shift + R (設定リロードの別定義、デフォルトは CTRL+SHIFT+R)
   { key = "R", mods = "SHIFT|CMD", action = wezterm.action.ReloadConfiguration },
   -- Cmd + D: ペインを縦に分割（左右）
-  { key = "d", mods = "CMD", action = wezterm.action{SplitHorizontal={domain="CurrentPaneDomain"}} },
+  { key = "d", mods = "CMD", action = wezterm.action.SplitHorizontal({domain="CurrentPaneDomain"}) },
   -- Cmd + Shift + D: ペインを横に分割（上下）
-  { key = "D", mods = "SHIFT|CMD", action = wezterm.action{SplitVertical={domain="CurrentPaneDomain"}} },
+  { key = "D", mods = "SHIFT|CMD", action = wezterm.action.SplitVertical({domain="CurrentPaneDomain"}) },
   -- Cmd + [Arrow Key]: ペインの移動
-  { key = "LeftArrow", mods = "CMD", action = wezterm.action{ActivatePaneDirection="Left"} },
-  { key = "RightArrow", mods = "CMD", action = wezterm.action{ActivatePaneDirection="Right"} },
-  { key = "UpArrow", mods = "CMD", action = wezterm.action{ActivatePaneDirection="Up"} },
-  { key = "DownArrow", mods = "CMD", action = wezterm.action{ActivatePaneDirection="Down"} },
+  { key = "LeftArrow", mods = "CMD", action = wezterm.action.ActivatePaneDirection("Left") },
+  { key = "RightArrow", mods = "CMD", action = wezterm.action.ActivatePaneDirection("Right") },
+  { key = "UpArrow", mods = "CMD", action = wezterm.action.ActivatePaneDirection("Up") },
+  { key = "DownArrow", mods = "CMD", action = wezterm.action.ActivatePaneDirection("Down") },
   -- Cmd + W: アクティブなペインを閉じる
-  { key = "w", mods = "CMD", action = wezterm.action{CloseCurrentPane={confirm=true}} },
+  { key = "w", mods = "CMD", action = wezterm.action.CloseCurrentPane({confirm=true}) },
   -- Cmd + T: 新しいタブを開く
   { key = "t", mods = "CMD", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
   -- Cmd + Shift + [ / ]: タブの切り替え
