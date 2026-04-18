@@ -6,6 +6,7 @@
 # Get the absolute path to the dotfiles directory, which is the directory of this script.
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOME_DIR=$HOME
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles"
 
 echo "🚀 Starting dotfiles setup..."
 echo "Dotfiles directory: $DOTFILES_DIR"
@@ -38,11 +39,34 @@ link_file() {
     ln -sfnv "$source_path" "$target_path"
 }
 
+# --- Helper function for verifying symlinks ---
+# $1: expected symlink path
+# $2: expected target path
+verify_link() {
+    local link_path="$1"
+    local expected_target="$2"
+
+    if [ -L "$link_path" ] && [ "$(readlink "$link_path")" = "$expected_target" ]; then
+        echo "  ✅ $link_path"
+    else
+        echo "  ❌ $link_path (期待: $expected_target → 実際: $(readlink "$link_path" 2>/dev/null || echo 'リンクなし'))"
+    fi
+}
+
 # --- Homebrew Setup ---
 if command -v brew >/dev/null 2>&1; then
     if [ -f "$DOTFILES_DIR/Brewfile" ]; then
-        echo "📦 Installing Homebrew packages via Brewfile..."
-        brew bundle --file="$DOTFILES_DIR/Brewfile"
+        mkdir -p "$CACHE_DIR"
+        BREWFILE_HASH_CACHE="$CACHE_DIR/brewfile.sha256"
+        CURRENT_HASH=$(shasum -a 256 "$DOTFILES_DIR/Brewfile" | awk '{print $1}')
+
+        if [ "$(cat "$BREWFILE_HASH_CACHE" 2>/dev/null)" != "$CURRENT_HASH" ]; then
+            echo "📦 Installing Homebrew packages via Brewfile..."
+            brew bundle --file="$DOTFILES_DIR/Brewfile"
+            echo "$CURRENT_HASH" > "$BREWFILE_HASH_CACHE"
+        else
+            echo "📦 Brewfile unchanged, skipping brew bundle."
+        fi
     fi
 else
     echo "⚠️ Homebrew not found. Skipping package installation."
@@ -90,6 +114,22 @@ if [[ "$(uname)" == "Darwin" ]]; then
         link_file "$DOTFILES_DIR/.vscode/keybindings.json" "$VSCODE_USER_DIR/keybindings.json"
     fi
 fi
+
+# --- Verify symlinks ---
+echo ""
+echo "🔍 Verifying symlinks..."
+verify_link "$HOME_DIR/.zshrc"                    "$DOTFILES_DIR/zsh/.zshrc"
+verify_link "$HOME_DIR/.zsh.d"                    "$DOTFILES_DIR/zsh/.zsh.d"
+verify_link "$HOME_DIR/.config/git/config"        "$DOTFILES_DIR/git/.config/git/config"
+verify_link "$HOME_DIR/.wezterm.lua"              "$DOTFILES_DIR/wezterm/.wezterm.lua"
+verify_link "$HOME_DIR/.config/starship.toml"     "$DOTFILES_DIR/starship/.starship.toml"
+verify_link "$HOME_DIR/.config/mise"              "$DOTFILES_DIR/mise"
+verify_link "$HOME_DIR/.config/sheldon"           "$DOTFILES_DIR/sheldon"
+verify_link "$HOME_DIR/.config/nvim"              "$DOTFILES_DIR/nvim"
+verify_link "$HOME_DIR/.config/aerospace"         "$DOTFILES_DIR/aerospace"
+verify_link "$HOME_DIR/.newsboat"                 "$DOTFILES_DIR/newsboat"
+verify_link "$HOME_DIR/.claude/settings.json"     "$DOTFILES_DIR/claude/settings.json"
+verify_link "$HOME_DIR/.claude/CLAUDE.md"         "$DOTFILES_DIR/claude/CLAUDE.md"
 
 echo ""
 echo "✅ Dotfiles setup complete!"
