@@ -8,3 +8,6 @@ git/.config/git/local
 
 # Neovim プラグインロックファイル（常に最新バージョンを使う方針）
 nvim/lazy-lock.json
+
+# newsboat フィード URL（個人の購読リストのため除外）
+newsboat/urls
