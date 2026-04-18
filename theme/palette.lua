@@ -1,3 +1,4 @@
+-- このファイルがパレットの唯一の定義元。変更時は palette.toml と 06_eza.zsh も同期すること
 local M = {
   base00 = "#0f1a1f",
   base01 = "#1b2b34",
