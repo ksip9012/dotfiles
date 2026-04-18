@@ -2,5 +2,16 @@
 	defaultBranch = main
 [core]
 	symlinks = true
+	editor = nvim
+	pager = bat
+[alias]
+	lg = log --oneline --graph --decorate --all
+	st = status -s
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true
+[diff]
+	tool = nvimdiff
 [include]
 	path = ~/.config/git/local
