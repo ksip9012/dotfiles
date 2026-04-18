@@ -38,9 +38,6 @@ export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 export PSQL_HISTORY="$XDG_STATE_HOME/psql/history"
 
 # --- その他の設定 ---
-# starship
-export STARSHIP_CONFIG="$HOME/.dotfiles/starship/.starship.toml"
-
 # Antigravity (XDG準拠のパス)
 export PATH="${XDG_DATA_HOME:-$HOME/.local/share}/antigravity/antigravity/bin:$PATH"
 
