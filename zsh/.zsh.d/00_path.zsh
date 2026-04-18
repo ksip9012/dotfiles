@@ -33,7 +33,7 @@ export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
 export MPLCONFIGDIR="$XDG_CONFIG_HOME/matplotlib"
-export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/history"
+export PYTHON_HISTORY="$XDG_STATE_HOME/python/history"
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 export PSQL_HISTORY="$XDG_STATE_HOME/psql/history"
 
