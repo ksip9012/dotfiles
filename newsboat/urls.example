@@ -1,0 +1,5 @@
+# newsboat フィード URL リスト
+# このファイルを urls にコピーして使用する
+# フォーマット: <URL> [タグ] ["フィード名"]
+#
+# https://feedurl.example/feed  tag1 tag2 "Feed Name"
