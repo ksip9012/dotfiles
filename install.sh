@@ -71,9 +71,14 @@ link_file "$DOTFILES_DIR/mise"                     "$HOME_DIR/.config/mise"
 link_file "$DOTFILES_DIR/sheldon"                  "$HOME_DIR/.config/sheldon"
 link_file "$DOTFILES_DIR/raycast"                  "$HOME_DIR/.config/raycast"
 link_file "$DOTFILES_DIR/nvim"                     "$HOME_DIR/.config/nvim"
+link_file "$DOTFILES_DIR/aerospace"                "$HOME_DIR/.config/aerospace"
 
 # Newsboat (If exists)
 link_file "$DOTFILES_DIR/newsboat"                 "$HOME_DIR/.newsboat"
+
+# Claude Code
+link_file "$DOTFILES_DIR/claude/settings.json"     "$HOME_DIR/.claude/settings.json"
+link_file "$DOTFILES_DIR/claude/CLAUDE.md"         "$HOME_DIR/.claude/CLAUDE.md"
 
 # --- Visual Studio Code (macOS only) ---
 if [[ "$(uname)" == "Darwin" ]]; then

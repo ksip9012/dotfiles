@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file_path=$(python3 -c \"import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('file_path',''))\" 2>/dev/null); [ -n \"$file_path\" ] && [ -n \"$NVIM\" ] && nvim --server \"$NVIM\" --remote \"$file_path\""
+          }
+        ]
+      }
+    ]
+  }
+}

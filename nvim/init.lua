@@ -1,24 +1,15 @@
--- ======================
--- 1. 基本設定の読み込み
--- ======================
-
--- リーダーキーを設定
+-- Leader key
 vim.g.mapleader = ' '
 
--- core ディレクトリ内のファイルを読み込む
+-- Core settings
 require('core.options')
 require('core.keymaps')
 
--- =====================================
--- 2. プラグインマネージャのセットアップ
--- =====================================
+-- Plugins
 require('plugins')
 
+-- LSP (Neovim 0.11+)
+require('lsp').setup()
 
--- =======================
--- 3. カラースキームの適用
--- =======================
-vim.cmd('colorscheme tokyonight')
-vim.api.nvim_set_hl(0, 'Normal', {bg='none'})
-vim.api.nvim_set_hl(0, 'NormalFloat', {bg='none'})
-
+-- UI/Theme Customization
+require('theme.highlights').setup()

@@ -2,3 +2,6 @@
 
 *.swp
 *~
+
+# git のローカル設定（メールアドレス等の個人情報）
+git/.config/git/local

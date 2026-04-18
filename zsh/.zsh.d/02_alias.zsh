@@ -75,3 +75,37 @@ alias gtd="_gtd"
 alias ls='eza --icons --git'
 alias ll='eza -la --icons --git --time-style=relative'
 alias lt='eza --tree --icons --level=2'
+
+# WezTerm: 現在のタブの自ペイン以外をすべて閉じる
+function devclose() {
+  local current=$WEZTERM_PANE
+  wezterm cli list --format json \
+    | jq -r --argjson cur "$current" '
+        (map(select(.pane_id == $cur)) | .[0].tab_id) as $tab |
+        .[] | select(.tab_id == $tab and .pane_id != $cur) | .pane_id
+      ' \
+    | while read -r pane_id; do
+        wezterm cli kill-pane --pane-id "$pane_id"
+      done
+}
+
+# WezTerm: カレントディレクトリで 3 ペインレイアウト展開（左上: claude / 右: nvim / 左下: terminal）
+function dev() {
+  local left_pane=$WEZTERM_PANE
+  local cwd="${1:-$PWD}"
+
+  # 右に 60% で分割 → nvim
+  local right_pane
+  right_pane=$(wezterm cli split-pane --right --percent 60 --cwd "$cwd")
+
+  # 左ペインを下に 50% で分割 → terminal（フォーカス先）
+  local bottom_pane
+  bottom_pane=$(wezterm cli split-pane --bottom --percent 50 --pane-id "$left_pane" --cwd "$cwd")
+
+  # 各ペインにコマンドを送信
+  wezterm cli send-text --pane-id "$left_pane" --no-paste $'claude\n'
+  wezterm cli send-text --pane-id "$right_pane" --no-paste $'nvim\n'
+
+  # フォーカスを左下のターミナルに
+  wezterm cli activate-pane --pane-id "$bottom_pane"
+}

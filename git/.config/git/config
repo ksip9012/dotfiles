@@ -1,7 +1,6 @@
 [init]
 	defaultBranch = main
-[user]
-	name = ksip9012
-	email = ksiper9012@gmail.com
 [core]
 	symlinks = true
+[include]
+	path = ~/.config/git/local

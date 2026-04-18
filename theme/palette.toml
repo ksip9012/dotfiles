@@ -1,0 +1,20 @@
+# ============================================================
+# COLOR PALETTES
+# ============================================================
+[palettes.custom]
+base00 = "#0f1a1f"
+base01 = "#1b2b34"
+base02 = "#223945"
+base03 = "#5a6e75"
+base04 = "#8fa1a8"
+base05 = "#cbd6dc"
+base06 = "#dce6db"
+base07 = "#ecf4f8"
+base08 = "#bf8b56"
+base09 = "#d9a066"
+base0A = "#bfbf56"
+base0B = "#56bf8b"
+base0C = "#56bfbf"
+base0D = "#568bbf"
+base0E = "#8b56bf"
+base0F = "#bfa68b"

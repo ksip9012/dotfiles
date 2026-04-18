@@ -4,24 +4,20 @@
 # CORE SETTINGS
 # ============================================================
 format = """
-[ ](mauve)$os$sudo $directory$status$cmd_duration $time
-$git_branch $git_status $python
+[  ](base0E)$os$sudo$directory$status$cmd_duration$battery$fill$git_branch$git_status$c$golang$nodejs$php$docker_context$python$time
 $character """
 
-palette = 'catppuccin_mocha'
+palette = "custom"
 # ============================================================
 # SHELL UI
 # ============================================================
 [character]
-success_symbol = '[❯](bold fg:sapphire)'
-error_symbol = '[❯](bold fg:red)'
+success_symbol = '[❯](bold fg:base0B)'
+error_symbol = '[❯](bold fg:base08)'
 disabled = false
 
-[line_break]
-disabled = true
-
 [status]
-style = "fg:green"
+style = "fg:base0B"
 format = '[$symbol]($style)'
 success_symbol = "[  ]($style)"
 symbol = "[  $status $common_meaning](bold fg:red)"
@@ -29,13 +25,13 @@ disabled = false
 
 [time]
 time_format = "%y-%m-%d(%a) %R"
-style = "lavender"
+style = "base04"
 format = '[ $time ]($style)'
 disabled = false
 
 [sudo]
-style = 'mauve'
-format = "[󰆥 ]($style)"
+style = 'base0E'
+format = "[󰆥 sudo ]($style)"
 disabled = false
 
 # ============================================================
@@ -54,25 +50,26 @@ style = "bold red"
 [cmd_duration]
 min_time = 700
 show_milliseconds = true
-style = "fg:rosewater"
+style = "base09"
 format = "[ 󰾆 $duration ]($style)"
 show_notifications = true
 min_time_to_notify = 45000
 
 [os]
 disabled = false
-style = "fg:mauve"
+style = "base0E"
 
 # ============================================================
 # DIRECTORY & GIT
 # ============================================================
 [directory]
-style = "blue"
-format = "[  $path |]($style)"
+style = "base0D"
+format = "[  $path ]($style)"
 truncation_length = 3
 truncate_to_repo = true
 truncation_symbol = "…/"
 read_only = " 󰌾"
+home_symbol = "󰋜 "
 
 [directory.substitutions]
 "Documents" = "󰈙 "
@@ -82,83 +79,82 @@ read_only = " 󰌾"
 
 [git_branch]
 symbol = ""
-style = "sapphire"
+style = "base0E"
 format = '[$symbol $branch ]($style)'
+truncation_length = 20
+truncation_symbol = "…"
 
 [git_status]
-style = "sapphire"
-format = '[$conflicted$deleted$renamed$modified$staged$untracked$ahead_behind]($style)'
-untracked = "? "
-stashed = "$ "
-modified = "! "
-staged = "+ "
-renamed = "» "
-deleted = "✘ "
-ahead = "⇡ "
-behind = "⇣ "
-diverged = "⇕ "
-up_to_date = '✓ '
+format = '$conflicted$stashed$deleted$renamed$modified$staged$untracked$ahead_behind'
+
+conflicted = "[✘ ](fg:base08)"
+deleted    = "[✘ ](fg:base08)"
+modified   = "[! ](fg:base09)"
+staged     = "[+ ](fg:base0B)"
+untracked  = "[? ](fg:base0C)"
+renamed    = "[» ](fg:base0D)"
+ahead      = "[⇡ ](fg:base0A)"
+behind     = "[⇣ ](fg:base0A)"
+diverged   = "[⇕ ](fg:base08)"
+stashed    = "[≡ ](fg:base0F)"
 
 # ============================================================
 # LANGUAGES & TOOLS (Alphabetical Order)
 # ============================================================
 [c]
 symbol = " "
-style = "fg:teal"
-format = '[ $symbol( $version) |]($style)'
+style = "base0C"
+format = '[| $symbol( $version) ]($style)'
 
 [docker_context]
 symbol = ""
-style = "fg:teal"
-format = '[ $symbol( $context) |]($style)'
+style = "base0C"
+format = '[| $symbol( $context) ]($style)'
 
 [golang]
 symbol = ""
-style = "fg:teal"
-format = '[ $symbol( $version) |]($style)'
+style = "base0C"
+format = '[| $symbol( $version) ]($style)'
 
 [nodejs]
 symbol = ""
-style = "fg:teal"
-format = '[ $symbol( $version) |]($style)'
+style = "base0C"
+format = '[| $symbol( $version) ]($style)'
 
 [php]
 symbol = ""
-style = "fg:teal"
-format = '[ $symbol( $version) |]($style)'
+style = "base0C"
+format = '[| $symbol( $version) ]($style)'
 
 [python]
 symbol = ""
-style = "bg:surface1 fg:yellow"
-format = '[ $symbol( $version) ( $virtualenv)|]($style)'
+style = "bg:base01 fg:base0A"
+format = '[| $symbol( $version) ( $virtualenv)]($style)'
+
+# ============================================================
+# FILL
+# ============================================================
+[fill]
+symbol = "─"
+style = "fg:base03"
 
 # ============================================================
 # COLOR PALETTES
 # ============================================================
-[palettes.catppuccin_mocha]
-rosewater = "#f5e0dc"
-flamingo = "#f2cdcd"
-pink = "#f5c2e7"
-mauve = "#cba6f7"
-red = "#f38ba8"
-maroon = "#eba0ac"
-peach = "#fab387"
-yellow = "#f9e2af"
-green = "#a6e3a1"
-teal = "#94e2d5"
-sky = "#89dceb"
-sapphire = "#74c7ec"
-blue = "#89b4fa"
-lavender = "#b4befe"
-text = "#cdd6f4"
-subtext1 = "#bac2de"
-subtext0 = "#a6adc8"
-overlay2 = "#9399b2"
-overlay1 = "#7f849c"
-overlay0 = "#6c7086"
-surface2 = "#585b70"
-surface1 = "#45475a"
-surface0 = "#313244"
-base = "#1e1e2e"
-mantle = "#181825"
-crust = "#11111b"
+[palettes.custom]
+base00 = "#0f1a1f"
+base01 = "#1b2b34"
+base02 = "#223945"
+base03 = "#5a6e75"
+base04 = "#8fa1a8"
+base05 = "#cbd6dc"
+base06 = "#dce6db"
+base07 = "#ecf4f8"
+base08 = "#bf8b56"
+base09 = "#d9a066"
+base0A = "#bfbf56"
+base0B = "#56bf8b"
+base0C = "#56bfbf"
+base0D = "#568bbf"
+base0E = "#8b56bf"
+base0F = "#bfa68b"
