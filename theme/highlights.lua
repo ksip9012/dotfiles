@@ -37,6 +37,21 @@ function M.setup()
 
   -- 優先度 (標準 Syntax よりも LSP を優先)
   vim.highlight.priorities.semantic_tokens = 200
+
+  -- --- NvimTree ---
+  set_hl('NvimTreeNormal',           { fg = p.base05, bg = p.base00 })
+  set_hl('NvimTreeNormalNC',         { fg = p.base05, bg = p.base00 })
+  set_hl('NvimTreeFolderName',       { fg = p.base0D })
+  set_hl('NvimTreeOpenedFolderName', { fg = p.base0D })
+  set_hl('NvimTreeEmptyFolderName',  { fg = p.base0D })
+  set_hl('NvimTreeFolderIcon',       { fg = p.base0D })
+  set_hl('NvimTreeRootFolder',       { fg = p.base0E, bold = true })
+  set_hl('NvimTreeSymlink',          { fg = p.base0C })
+  set_hl('NvimTreeExecFile',         { fg = p.base0B })
+  set_hl('NvimTreeGitDirty',         { fg = p.base08 })
+  set_hl('NvimTreeGitStaged',        { fg = p.base0B })
+  set_hl('NvimTreeGitIgnored',       { fg = p.base03 })
+  set_hl('NvimTreeIndentMarker',     { fg = p.base02 })
 end
 
 return M
