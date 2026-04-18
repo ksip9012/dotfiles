@@ -58,7 +58,7 @@ link_file "$DOTFILES_DIR/zsh/.zshrc"              "$HOME_DIR/.zshrc"
 link_file "$DOTFILES_DIR/zsh/.zsh.d"              "$HOME_DIR/.zsh.d"
 
 # Git
-link_file "$DOTFILES_DIR/git/.gitconfig"         "$HOME_DIR/.gitconfig"
+link_file "$DOTFILES_DIR/git/.config/git/config"  "$HOME_DIR/.config/git/config"
 
 # WezTerm
 link_file "$DOTFILES_DIR/wezterm/.wezterm.lua"      "$HOME_DIR/.wezterm.lua"
