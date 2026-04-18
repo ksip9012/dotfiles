@@ -29,3 +29,8 @@ apply = ["defer"]
 # カッコなどのペア補完
 github = "hlissner/zsh-autopair"
 apply = ["defer"]
+
+[plugins.zsh-autosuggestions]
+# 履歴ベースのコマンドサジェスト
+github = "zsh-users/zsh-autosuggestions"
+apply = ["defer"]
