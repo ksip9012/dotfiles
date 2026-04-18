@@ -5,3 +5,6 @@
 
 # git のローカル設定（メールアドレス等の個人情報）
 git/.config/git/local
+
+# Neovim プラグインロックファイル（常に最新バージョンを使う方針）
+nvim/lazy-lock.json
