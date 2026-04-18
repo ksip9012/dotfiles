@@ -42,6 +42,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - LSP サーバーのインストール管理: Mason（`nvim/lua/plugins.lua`）
 - 有効な LSP: Ruff（Python）、LuaLS（Lua）
 - 補完: `nvim-cmp` + `cmp-nvim-lsp`
+- `nvim/lazy-lock.json` は `.gitignore` で除外（常に最新プラグインを使う方針）
 
 ### ランタイム管理
 
