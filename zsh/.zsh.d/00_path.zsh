@@ -37,6 +37,10 @@ export PYTHON_HISTORY="$XDG_STATE_HOME/python/history"
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 export PSQL_HISTORY="$XDG_STATE_HOME/psql/history"
 
+# --- Zsh 補完パス ---
+# Homebrew の補完ファイル（eza など）を compinit より前に登録
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+
 # --- その他の設定 ---
 # Antigravity (XDG準拠のパス)
 export PATH="${XDG_DATA_HOME:-$HOME/.local/share}/antigravity/antigravity/bin:$PATH"
