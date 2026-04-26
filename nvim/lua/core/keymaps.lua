@@ -27,6 +27,19 @@ map('n', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<CR>', {desc = 'Show 
 map('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', {desc = 'Prev diagnostic'})
 map('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', {desc = 'Next diagnostic'})
 
+-- GTD
+local gtd = vim.fn.expand('~/Documents/life/gtd/')
+map('n', '<leader>zi', function() vim.cmd('e ' .. gtd .. '001_inbox.md') end,        {desc = 'GTD: Inbox'})
+map('n', '<leader>zt', function() vim.cmd('e ' .. gtd .. '004_todo.md') end,         {desc = 'GTD: Todo'})
+map('n', '<leader>zw', function() vim.cmd('e ' .. gtd .. '007_waiting_for.md') end,  {desc = 'GTD: Waiting'})
+map('n', '<leader>zs', function() vim.cmd('e ' .. gtd .. '006_someday_maybe.md') end,{desc = 'GTD: Someday'})
+map('n', '<leader>zp', function()
+  require('telescope.builtin').find_files({ cwd = gtd .. '002_project/' })
+end, {desc = 'GTD: Projects'})
+map('n', '<leader>z/', function()
+  require('telescope.builtin').live_grep({ cwd = vim.fn.expand('~/Documents/life/') })
+end, {desc = 'GTD: Grep all'})
+
 -- which-key グループラベル
 local ok, wk = pcall(require, 'which-key')
 if ok then
@@ -34,5 +47,6 @@ if ok then
     { '<leader>h', group = 'Git hunk' },
     { '<leader>f', group = 'Telescope' },
     { '<leader>g', group = 'Git' },
+    { '<leader>z', group = 'GTD' },
   })
 end

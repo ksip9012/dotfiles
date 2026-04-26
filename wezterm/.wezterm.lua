@@ -92,6 +92,19 @@ config.cell_width = 0.90
 -- 行間の調整
 config.line_height = 0.95
 
+-- アクティブペインを目立たせる
+config.inactive_pane_hsb = {
+  saturation = 0.7,
+  brightness = 0.6,
+}
+
+-- タブバーに時計を表示
+wezterm.on('update-right-status', function(window, _)
+  window:set_right_status(wezterm.format({
+    { Text = wezterm.strftime(' %Y-%m-%d %H:%M ') },
+  }))
+end)
+
 -- スクロールバック行数
 config.scrollback_lines = 10000
 
