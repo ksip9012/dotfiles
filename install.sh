@@ -103,6 +103,7 @@ link_file "$DOTFILES_DIR/newsboat"                 "$HOME_DIR/.newsboat"
 # Claude Code
 link_file "$DOTFILES_DIR/claude/settings.json"     "$HOME_DIR/.claude/settings.json"
 link_file "$DOTFILES_DIR/claude/CLAUDE.md"         "$HOME_DIR/.claude/CLAUDE.md"
+link_file "$DOTFILES_DIR/claude/skills"            "$HOME_DIR/.claude/skills"
 
 # --- Visual Studio Code (macOS only) ---
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -130,6 +131,7 @@ verify_link "$HOME_DIR/.config/aerospace"         "$DOTFILES_DIR/aerospace"
 verify_link "$HOME_DIR/.newsboat"                 "$DOTFILES_DIR/newsboat"
 verify_link "$HOME_DIR/.claude/settings.json"     "$DOTFILES_DIR/claude/settings.json"
 verify_link "$HOME_DIR/.claude/CLAUDE.md"         "$DOTFILES_DIR/claude/CLAUDE.md"
+verify_link "$HOME_DIR/.claude/skills"            "$DOTFILES_DIR/claude/skills"
 
 echo ""
 echo "✅ Dotfiles setup complete!"
