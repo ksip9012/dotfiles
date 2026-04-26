@@ -11,7 +11,52 @@ require('lazy').setup({
   {
     'nvim-tree/nvim-tree.lua',
     dependencies = {'nvim-tree/nvim-web-devicons'},
-    config = function() require('nvim-tree').setup() end,
+    config = function()
+      require('nvim-tree').setup({
+        update_focused_file = { enable = true },
+        git = { enable = true, ignore = false },
+        renderer = {
+          indent_markers = { enable = true },
+        },
+      })
+
+      local function hide_cursor()
+        local cursorline_hl = vim.api.nvim_get_hl(0, { name = 'CursorLine', link = false })
+        local normal_hl     = vim.api.nvim_get_hl(0, { name = 'Normal',     link = false })
+        local hl_options = {}
+        if cursorline_hl.bg then hl_options.bg = cursorline_hl.bg end
+        if normal_hl.fg     then hl_options.fg = normal_hl.fg     end
+        if next(hl_options) == nil then return end
+
+        vim.api.nvim_set_hl(0, 'NvimTreeCursorInvisible', hl_options)
+        local parts = {}
+        for setting in string.gmatch(vim.api.nvim_get_option_value('guicursor', { scope = 'global' }), '[^,]+') do
+          local mode_prefix, _ = setting:match('^([%w%-]+):(.+)$')
+          if mode_prefix and mode_prefix:find('n') then
+            table.insert(parts, mode_prefix .. ':ver01-NvimTreeCursorInvisible')
+          else
+            table.insert(parts, setting)
+          end
+        end
+        vim.api.nvim_set_option_value('guicursor', table.concat(parts, ','), { scope = 'local' })
+      end
+
+      local function show_cursor()
+        vim.api.nvim_set_option_value(
+          'guicursor',
+          vim.api.nvim_get_option_value('guicursor', { scope = 'global' }),
+          { scope = 'local' }
+        )
+      end
+
+      local group = vim.api.nvim_create_augroup('NvimTreeCursor', { clear = true })
+      vim.api.nvim_create_autocmd('BufEnter', {
+        group = group, pattern = 'NvimTree_*', callback = hide_cursor,
+      })
+      vim.api.nvim_create_autocmd('BufLeave', {
+        group = group, pattern = 'NvimTree_*', callback = show_cursor,
+      })
+    end,
   },
   {
     'nvim-telescope/telescope.nvim',
