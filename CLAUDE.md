@@ -51,3 +51,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Python コーディング規約
 
 Ruff の設定により行長は **79文字**（`nvim/lua/lsp/init.lua` の `lineLength` 設定）。
+
+## GitHub 運用ルール
+
+### ブランチ戦略
+
+GitHub Flow を採用。常に `main` からブランチを切り、PR 経由でマージする。
+
+### ブランチ作成
+
+**Issue への取り組みを開始する前に、必ず `github-branch` スキルでブランチを作成する。**
+
+命名規則: `<type>/issue-<番号>-<簡潔な説明>`
+例: `feat/issue-32-github-branch-skill`
+
+type は `feat` / `fix` / `docs` / `chore` / `refactor` / `ci` / `idea` / `research` から選ぶ。
