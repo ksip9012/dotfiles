@@ -25,6 +25,10 @@ type は `feat` / `fix` / `docs` / `chore` / `refactor` / `ci` / `idea` / `resea
 - `--assignee ksip9012`
 - `--label <内容に対応するラベル>`
 
+### git push 後のコメント
+
+`git push` を実行した後、その Issue の作業が**完了していない**場合は必ず `github-issue-comment` スキルを呼び出してコメントを追記する。作業が完了した場合は `github-pr` スキルで PR を作成する。
+
 ### PR 作成
 
 **PR 作成時は必ず以下を設定する：**
