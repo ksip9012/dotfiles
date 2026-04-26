@@ -19,6 +19,12 @@ GitHub Flow を採用。常に `main` からブランチを切り、PR 経由で
 
 type は `feat` / `fix` / `docs` / `chore` / `refactor` / `ci` / `idea` / `research` から選ぶ。
 
+### Issue 作成
+
+**Issue 作成時は必ず以下を設定する：**
+- `--assignee ksip9012`
+- `--label <内容に対応するラベル>`
+
 ### PR 作成
 
 **PR 作成時は必ず以下を設定する：**
