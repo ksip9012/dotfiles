@@ -72,6 +72,15 @@ else
     echo "⚠️ Homebrew not found. Skipping package installation."
 fi
 
+# --- Palette generation ---
+echo ""
+echo "🎨 Generating palette files from theme/palette.lua..."
+if command -v python3 >/dev/null 2>&1; then
+    python3 "$DOTFILES_DIR/theme/generate.py"
+else
+    echo "⚠️ python3 not found. Skipping palette generation."
+fi
+
 # --- Link configuration files ---
 
 echo ""

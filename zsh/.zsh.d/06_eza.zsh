@@ -1,4 +1,4 @@
-# カラーコードは theme/palette.lua の base16 パレットに合わせること
+# このファイルは theme/generate.py で自動生成されます。直接編集しないこと
 export LS_COLORS="\
 di=38;2;86;139;191:\
 ex=38;2;86;191;139:\
