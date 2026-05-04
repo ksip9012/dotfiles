@@ -71,10 +71,20 @@ function _gtd() {
 }
 alias gtd="_gtd"
 
+# bat
+alias cat='bat --paging=never'
+
 # eza
 alias ls='eza --icons --git'
 alias ll='eza -la --icons --git --time-style=relative'
 alias lt='eza --tree --icons --level=2'
+
+# modern CLI replacements
+alias grep='rg'
+alias du='dust'
+alias ps='procs'
+alias top='btm'
+alias rm='rip'
 
 # WezTerm: 現在のタブの自ペイン以外をすべて閉じる
 function devclose() {
