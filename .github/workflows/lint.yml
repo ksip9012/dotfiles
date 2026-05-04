@@ -1,0 +1,38 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run shellcheck
+        run: shellcheck install.sh
+
+  luacheck:
+    name: luacheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install luacheck
+        run: sudo apt-get install -y luarocks && sudo luarocks install luacheck
+      - name: Run luacheck
+        run: |
+          luacheck \
+            nvim/lua/plugins.lua \
+            nvim/lua/core/ \
+            nvim/lua/lsp/
+
+  brewfile:
+    name: Brewfile syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Brewfile syntax
+        run: ruby -c Brewfile
