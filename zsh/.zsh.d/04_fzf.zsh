@@ -2,6 +2,7 @@
 eval "$(fzf --zsh)"
 
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_GREP_COMMAND='rg --column --line-number --no-heading --color=always --smart-case'
 export FZF_DEFAULT_OPTS='
   --height 40% --layout=reverse --border
   --bind "ctrl-/:toggle-preview"

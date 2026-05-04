@@ -3,7 +3,7 @@
 [core]
 	symlinks = true
 	editor = nvim
-	pager = bat
+	pager = delta
 [alias]
 	lg = log --oneline --graph --decorate --all
 	st = status -s
@@ -13,5 +13,13 @@
 	autoSetupRemote = true
 [diff]
 	tool = nvimdiff
+	colorMoved = default
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	side-by-side = true
+[merge]
+	conflictstyle = diff3
 [include]
 	path = ~/.config/git/local
