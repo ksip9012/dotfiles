@@ -61,7 +61,6 @@ brew "cask"         # Homebrew Cask 本体
 
 # ── Cask: Development ──────────────────────────────────────────────────────
 cask "claude-code"         # Anthropic Claude Code デスクトップアプリ
-cask "cursor"              # AI 統合エディタ
 cask "visual-studio-code"  # コードエディタ
 cask "zed"                 # 高速コードエディタ
 cask "wezterm"             # GPU アクセラレーション対応ターミナル
@@ -83,7 +82,6 @@ cask "discord"      # コミュニティチャット
 # ── Cask: Media / Creative ─────────────────────────────────────────────────
 cask "blender"      # 3D モデリング・アニメーション
 cask "spotify"      # 音楽ストリーミング
-cask "antigravity"  # スクリーンセーバー
 
 # ── Cask: Browser ──────────────────────────────────────────────────────────
 cask "google-chrome" # Web ブラウザ
