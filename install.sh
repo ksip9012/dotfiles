@@ -105,6 +105,28 @@ link_file "$DOTFILES_DIR/claude/settings.json"     "$HOME_DIR/.claude/settings.j
 link_file "$DOTFILES_DIR/claude/CLAUDE.md"         "$HOME_DIR/.claude/CLAUDE.md"
 link_file "$DOTFILES_DIR/claude/skills"            "$HOME_DIR/.claude/skills"
 
+# --- Git local config setup ---
+GIT_LOCAL="$HOME_DIR/.config/git/local"
+GIT_LOCAL_EXAMPLE="$DOTFILES_DIR/git/.config/git/local.example"
+
+if [ ! -f "$GIT_LOCAL" ]; then
+    echo ""
+    echo "👤 Git のユーザー情報を設定します（~/.config/git/local を作成）..."
+    printf "  名前  (git user.name) : "
+    read -r git_name
+    printf "  メール (git user.email): "
+    read -r git_email
+
+    mkdir -p "$(dirname "$GIT_LOCAL")"
+    sed -e "s/Your Name/$git_name/" \
+        -e "s/your@email.com/$git_email/" \
+        "$GIT_LOCAL_EXAMPLE" > "$GIT_LOCAL"
+    echo "  ✅ ~/.config/git/local を作成しました。"
+else
+    echo ""
+    echo "👤 ~/.config/git/local はすでに存在します。スキップします。"
+fi
+
 # --- Visual Studio Code (macOS only) ---
 if [[ "$(uname)" == "Darwin" ]]; then
     VSCODE_USER_DIR="$HOME_DIR/Library/Application Support/Code/User"
