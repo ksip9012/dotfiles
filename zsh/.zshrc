@@ -20,8 +20,16 @@ export ZCOMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 # compinit を実行する
 autoload -Uz compinit && compinit -i -d "$ZCOMPDUMP"
 ###########################################################
-# mise
-eval "$(mise activate zsh)"
+# mise - バイナリの更新日時をキーにキャッシュ（プロセス生成なし）
+() {
+    local cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/mise_init.zsh"
+    local bin
+    bin="$(command -v mise 2>/dev/null)"
+    if [[ -n "$bin" ]] && { [[ ! -f "$cache" ]] || [[ "$bin" -nt "$cache" ]]; }; then
+        mise activate zsh > "$cache"
+    fi
+    [[ -f "$cache" ]] && source "$cache"
+}
 ###########################################################
 # sheldon
 eval "$(sheldon source)"
@@ -30,5 +38,13 @@ eval "$(sheldon source)"
 setopt no_beep
 setopt nolistbeep
 ###########################################################
-# starship - put last part of .zshrc
-eval "$(starship init zsh)"
+# starship - バイナリの更新日時をキーにキャッシュ（プロセス生成なし）
+() {
+    local cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/starship_init.zsh"
+    local bin
+    bin="$(command -v starship 2>/dev/null)"
+    if [[ -n "$bin" ]] && { [[ ! -f "$cache" ]] || [[ "$bin" -nt "$cache" ]]; }; then
+        starship init zsh > "$cache"
+    fi
+    [[ -f "$cache" ]] && source "$cache"
+}
