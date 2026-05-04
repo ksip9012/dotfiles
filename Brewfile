@@ -13,6 +13,8 @@ brew "procs"        # ps 代替：カラー付きプロセス一覧
 brew "ripgrep"      # grep 代替：高速全文検索（fzf・Neovim Telescope と連携）
 brew "rm-improved"  # rm 代替：削除ファイルをゴミ箱に送り復元可能にする
 brew "sd"           # sed 代替：直感的な文字列置換
+brew "stylua"       # Lua フォーマッタ（Neovim conform.nvim 用）
+brew "prettier"     # JS/TS/Markdown/JSON/YAML/HTML/CSS フォーマッタ（Neovim conform.nvim 用）
 brew "tree"         # ディレクトリツリー表示
 brew "xh"           # curl 代替：HTTP リクエストクライアント
 brew "zoxide"       # cd 代替：履歴ベースのスマートディレクトリ移動

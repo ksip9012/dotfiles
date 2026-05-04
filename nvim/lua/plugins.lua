@@ -149,6 +149,30 @@ require('lazy').setup({
 
   { 'windwp/nvim-autopairs', event = 'InsertEnter', config = function() require('nvim-autopairs').setup() end },
 
+  -- フォーマッタ (Python は Ruff LSP が担当するため除外)
+  {
+    'stevearc/conform.nvim',
+    event = 'BufWritePre',
+    config = function()
+      require('conform').setup({
+        formatters_by_ft = {
+          lua        = { 'stylua' },
+          markdown   = { 'prettier' },
+          javascript = { 'prettier' },
+          typescript = { 'prettier' },
+          json       = { 'prettier' },
+          yaml       = { 'prettier' },
+          html       = { 'prettier' },
+          css        = { 'prettier' },
+        },
+        format_on_save = {
+          timeout_ms   = 500,
+          lsp_fallback = false,
+        },
+      })
+    end,
+  },
+
   -- lazygit
   {
     'kdheepak/lazygit.nvim',
