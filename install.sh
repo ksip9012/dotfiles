@@ -84,8 +84,8 @@ link_file "$DOTFILES_DIR/zsh/.zsh.d"              "$HOME_DIR/.zsh.d"
 # Git
 link_file "$DOTFILES_DIR/git/.config/git/config"  "$HOME_DIR/.config/git/config"
 
-# WezTerm
-link_file "$DOTFILES_DIR/wezterm/.wezterm.lua"      "$HOME_DIR/.wezterm.lua"
+# WezTerm (XDG: ~/.config/wezterm/wezterm.lua)
+link_file "$DOTFILES_DIR/wezterm/wezterm.lua"       "$HOME_DIR/.config/wezterm/wezterm.lua"
 
 # Starship
 link_file "$DOTFILES_DIR/starship/.starship.toml"  "$HOME_DIR/.config/starship.toml"
@@ -144,7 +144,7 @@ echo "🔍 Verifying symlinks..."
 verify_link "$HOME_DIR/.zshrc"                    "$DOTFILES_DIR/zsh/.zshrc"
 verify_link "$HOME_DIR/.zsh.d"                    "$DOTFILES_DIR/zsh/.zsh.d"
 verify_link "$HOME_DIR/.config/git/config"        "$DOTFILES_DIR/git/.config/git/config"
-verify_link "$HOME_DIR/.wezterm.lua"              "$DOTFILES_DIR/wezterm/.wezterm.lua"
+verify_link "$HOME_DIR/.config/wezterm/wezterm.lua" "$DOTFILES_DIR/wezterm/wezterm.lua"
 verify_link "$HOME_DIR/.config/starship.toml"     "$DOTFILES_DIR/starship/.starship.toml"
 verify_link "$HOME_DIR/.config/mise"              "$DOTFILES_DIR/mise"
 verify_link "$HOME_DIR/.config/sheldon"           "$DOTFILES_DIR/sheldon"
