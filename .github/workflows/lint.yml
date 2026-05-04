@@ -25,6 +25,7 @@ jobs:
       - name: Run luacheck
         run: |
           luacheck \
+            --config nvim/.luacheckrc \
             nvim/lua/plugins.lua \
             nvim/lua/core/ \
             nvim/lua/lsp/
