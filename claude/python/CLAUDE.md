@@ -28,7 +28,7 @@ Namespaces are one honking great idea -- let's do more of those!
 ### コードレイアウト (PEP-8)
 
 - インデント: スペース4つ (タブ不可)
-- 行長: **88文字以内**
+- 行長: **79文字以内**
 - 二項演算子は行頭に配置 (`and`, `or`, `+` 等)
 - 文字列の連結は行頭で揃える
 - トップレベルの関数・クラス定義の前後に空行2つ
@@ -228,7 +228,7 @@ uv run pytest             # テスト実行
 
 ```toml
 [tool.ruff]
-line-length = 88
+line-length = 79
 
 [tool.ruff.lint]
 select = [
