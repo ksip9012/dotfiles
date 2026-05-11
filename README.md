@@ -177,3 +177,10 @@ zsh  # 次回起動時に自動再生成
 rm ~/.cache/dotfiles/brewfile.sha256
 ./install.sh
 ```
+
+## 言語別メモ
+
+### python
+
+- 型チェッカーには `pyright` を利用
+- `ty` が 1.0 になったら置き換えを考える
