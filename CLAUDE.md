@@ -40,14 +40,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - プラグイン管理: `lazy.nvim`（`nvim/lua/plugins.lua`）
 - LSP: Neovim 0.10+ ビルトイン `vim.lsp.config` / `vim.lsp.enable` を使用（`nvim/lua/lsp/init.lua`）
 - LSP サーバーのインストール管理: Mason（`nvim/lua/plugins.lua`）
-- 有効な LSP: Ruff（Python）、LuaLS（Lua）
+- 有効な LSP: Ruff（Python、`lineLength = 79`）、LuaLS（Lua）
 - 補完: `nvim-cmp` + `cmp-nvim-lsp`
 - `nvim/lazy-lock.json` は `.gitignore` で除外（常に最新プラグインを使う方針）
 
 ### ランタイム管理
 
 `mise` で Python・Node.js・Poetry バージョンを管理（`mise/config.toml`）。プロジェクト固有バージョンは `mise.toml` をプロジェクトルートに配置する。
-
-## Python コーディング規約
-
-Ruff の設定により行長は **79文字**（`nvim/lua/lsp/init.lua` の `lineLength` 設定）。
