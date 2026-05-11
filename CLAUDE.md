@@ -31,6 +31,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `claude/settings.json` | `~/.claude/settings.json` |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` |
 
+`claude/github/` と `claude/python/` は `~/.claude/` へのリンク不要。各プロジェクトの CLAUDE.md から `@~/.dotfiles/claude/<dir>/CLAUDE.md` で参照する。
+
 ### zsh 設定の分割構造
 
 `.zshrc` は `zsh/.zsh.d/` 内の `*.zsh` ファイルをファイル名の番号順に読み込む。新しい設定ファイルは番号プレフィックスで順序を管理する。sheldon は遅延読み込み（`zsh-defer`）を使用。
