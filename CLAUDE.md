@@ -30,6 +30,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `mise/` | `~/.config/mise/` |
 | `claude/settings.json` | `~/.claude/settings.json` |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` |
+| `zed/settings.json` | `~/.config/zed/settings.json` |
+| `gh/config.yml` | `~/.config/gh/config.yml` |
 
 `claude/github/` と `claude/python/` は `~/.claude/` へのリンク不要。各プロジェクトの CLAUDE.md から `@~/.dotfiles/claude/<dir>/CLAUDE.md` で参照する。
 

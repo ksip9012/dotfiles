@@ -109,6 +109,12 @@ link_file "$DOTFILES_DIR/aerospace"                "$HOME_DIR/.config/aerospace"
 # Newsboat (If exists)
 link_file "$DOTFILES_DIR/newsboat"                 "$HOME_DIR/.newsboat"
 
+# Zed
+link_file "$DOTFILES_DIR/zed/settings.json"        "$HOME_DIR/.config/zed/settings.json"
+
+# GitHub CLI
+link_file "$DOTFILES_DIR/gh/config.yml"            "$HOME_DIR/.config/gh/config.yml"
+
 # Claude Code
 link_file "$DOTFILES_DIR/claude/settings.json"     "$HOME_DIR/.claude/settings.json"
 link_file "$DOTFILES_DIR/claude/CLAUDE.md"         "$HOME_DIR/.claude/CLAUDE.md"
@@ -163,6 +169,8 @@ verify_link "$HOME_DIR/.newsboat"                 "$DOTFILES_DIR/newsboat"
 verify_link "$HOME_DIR/.claude/settings.json"     "$DOTFILES_DIR/claude/settings.json"
 verify_link "$HOME_DIR/.claude/CLAUDE.md"         "$DOTFILES_DIR/claude/CLAUDE.md"
 verify_link "$HOME_DIR/.claude/skills"            "$DOTFILES_DIR/claude/skills"
+verify_link "$HOME_DIR/.config/zed/settings.json" "$DOTFILES_DIR/zed/settings.json"
+verify_link "$HOME_DIR/.config/gh/config.yml"     "$DOTFILES_DIR/gh/config.yml"
 
 echo ""
 echo "✅ Dotfiles setup complete!"

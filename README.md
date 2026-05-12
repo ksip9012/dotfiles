@@ -48,6 +48,7 @@ cd ~/.dotfiles
 | ツール | 用途 |
 |---|---|
 | [Neovim](https://neovim.io/) | エディタ（lazy.nvim / LSP / conform.nvim） |
+| [Zed](https://zed.dev/) | エディタ（`~/.config/zed/settings.json`） |
 | [WezTerm](https://wezfurlong.org/wezterm/) | ターミナル（`~/.config/wezterm/wezterm.lua`） |
 
 ### モダン CLI ツール（エイリアス設定済み）
@@ -71,6 +72,7 @@ cd ~/.dotfiles
 | ツール | 用途 |
 |---|---|
 | git | グローバル設定（delta pager・エイリアス） |
+| [gh](https://cli.github.com/) | GitHub CLI 設定（`~/.config/gh/config.yml`） |
 | [Claude Code](https://claude.ai/code) | 設定・スキル・CLAUDE.md |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | 設定 |
 | VS Code | キーバインド・設定 |
@@ -94,6 +96,8 @@ cd ~/.dotfiles
 | `git/.config/git/config` | `~/.config/git/config` |
 | `claude/settings.json` | `~/.claude/settings.json` |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` |
+| `zed/settings.json` | `~/.config/zed/settings.json` |
+| `gh/config.yml` | `~/.config/gh/config.yml` |
 
 ### zsh 設定の分割構造
 
