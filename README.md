@@ -73,11 +73,10 @@ cd ~/.dotfiles
 |---|---|
 | git | グローバル設定（delta pager・エイリアス） |
 | [gh](https://cli.github.com/) | GitHub CLI 設定（`~/.config/gh/config.yml`） |
-| [Claude Code](https://claude.ai/code) | 設定・スキル・CLAUDE.md |
+| [Claude Code](https://claude.ai/code) | 設定・CLAUDE.md（スキルは別リポジトリ [agent-skills](https://github.com/ksip9012/agent-skills) で管理） |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | 設定 |
 | VS Code | キーバインド・設定 |
 | [AeroSpace](https://github.com/nikitabobko/AeroSpace) | タイルウィンドウマネージャ |
-| [Raycast](https://www.raycast.com/) | ランチャー |
 | [newsboat](https://newsboat.org/) | RSS リーダー |
 
 ## アーキテクチャ
