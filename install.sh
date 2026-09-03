@@ -102,7 +102,6 @@ link_file "$DOTFILES_DIR/starship/.starship.toml"  "$HOME_DIR/.config/starship.t
 # Directory-based configurations (Modern Tools)
 link_file "$DOTFILES_DIR/mise"                     "$HOME_DIR/.config/mise"
 link_file "$DOTFILES_DIR/sheldon"                  "$HOME_DIR/.config/sheldon"
-link_file "$DOTFILES_DIR/raycast"                  "$HOME_DIR/.config/raycast"
 link_file "$DOTFILES_DIR/nvim"                     "$HOME_DIR/.config/nvim"
 link_file "$DOTFILES_DIR/aerospace"                "$HOME_DIR/.config/aerospace"
 
@@ -118,7 +117,17 @@ link_file "$DOTFILES_DIR/gh/config.yml"            "$HOME_DIR/.config/gh/config.
 # Claude Code
 link_file "$DOTFILES_DIR/claude/settings.json"     "$HOME_DIR/.claude/settings.json"
 link_file "$DOTFILES_DIR/claude/CLAUDE.md"         "$HOME_DIR/.claude/CLAUDE.md"
-link_file "$DOTFILES_DIR/claude/skills"            "$HOME_DIR/.claude/skills"
+
+# Agent Skills (別リポジトリ: https://github.com/ksip9012/agent-skills)
+AGENT_SKILLS_DIR="$HOME_DIR/.claude-skills"
+if [ -d "$AGENT_SKILLS_DIR/.git" ]; then
+    echo "🔄 Updating agent-skills..."
+    git -C "$AGENT_SKILLS_DIR" pull --ff-only
+else
+    echo "📥 Cloning agent-skills..."
+    git clone https://github.com/ksip9012/agent-skills.git "$AGENT_SKILLS_DIR"
+fi
+link_file "$AGENT_SKILLS_DIR"                      "$HOME_DIR/.claude/skills"
 
 # --- Git local config setup ---
 GIT_LOCAL="$HOME_DIR/.config/git/local"
@@ -168,7 +177,7 @@ verify_link "$HOME_DIR/.config/aerospace"         "$DOTFILES_DIR/aerospace"
 verify_link "$HOME_DIR/.newsboat"                 "$DOTFILES_DIR/newsboat"
 verify_link "$HOME_DIR/.claude/settings.json"     "$DOTFILES_DIR/claude/settings.json"
 verify_link "$HOME_DIR/.claude/CLAUDE.md"         "$DOTFILES_DIR/claude/CLAUDE.md"
-verify_link "$HOME_DIR/.claude/skills"            "$DOTFILES_DIR/claude/skills"
+verify_link "$HOME_DIR/.claude/skills"            "$AGENT_SKILLS_DIR"
 verify_link "$HOME_DIR/.config/zed/settings.json" "$DOTFILES_DIR/zed/settings.json"
 verify_link "$HOME_DIR/.config/gh/config.yml"     "$DOTFILES_DIR/gh/config.yml"
 
