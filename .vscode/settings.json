@@ -1,4 +1,5 @@
 {
+  "update.mode": "none",
   "editor.renderWhitespace": "all",
   "editor.tabSize": 2,
   "editor.fontFamily": "HackGen35",
@@ -8,5 +9,7 @@
   "window.zoomLevel": 1,
   "explorer.confirmDragAndDrop": false,
   "markdown.marp.html": "all",
-  "workbench.secondarySideBar.defaultVisibility": "hidden"
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
+  "hediet.vscode-drawio.theme": "kennedy",
+  "hediet.vscode-drawio.appearance": "light"
 }

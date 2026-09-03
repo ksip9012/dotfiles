@@ -12,5 +12,9 @@
       }
     ]
   },
-  "theme": "dark-ansi"
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true
+  },
+  "theme": "dark-ansi",
+  "tui": "fullscreen"
 }
