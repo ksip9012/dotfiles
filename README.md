@@ -96,6 +96,7 @@ cd ~/.dotfiles
 | `claude/settings.json` | `~/.claude/settings.json` |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` |
 | `claude/rules/` | `~/.claude/rules/` |
+| `claude/hooks/` | `~/.claude/hooks/` |
 | `antigravity/AGENTS.md` | `~/.gemini/config/AGENTS.md` |
 | `zed/settings.json` | `~/.config/zed/settings.json` |
 | `gh/config.yml` | `~/.config/gh/config.yml` |

@@ -8,6 +8,7 @@ vim.g.loaded_netrwPlugin = 1
 -- Core settings
 require('core.options')
 require('core.keymaps')
+require('core.claude').setup()
 
 -- Plugins
 require('plugins')

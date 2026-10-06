@@ -119,6 +119,7 @@ link_file "$DOTFILES_DIR/gh/config.yml"            "$HOME_DIR/.config/gh/config.
 link_file "$DOTFILES_DIR/claude/settings.json"     "$HOME_DIR/.claude/settings.json"
 link_file "$DOTFILES_DIR/claude/CLAUDE.md"         "$HOME_DIR/.claude/CLAUDE.md"
 link_file "$DOTFILES_DIR/claude/rules"             "$HOME_DIR/.claude/rules"
+link_file "$DOTFILES_DIR/claude/hooks"             "$HOME_DIR/.claude/hooks"
 
 # Antigravity CLI（設定ファイルは GCP プロジェクト等を含むためリンクしない）
 link_file "$DOTFILES_DIR/antigravity/AGENTS.md"    "$HOME_DIR/.gemini/config/AGENTS.md"
@@ -184,6 +185,7 @@ verify_link "$HOME_DIR/.newsboat"                 "$DOTFILES_DIR/newsboat"
 verify_link "$HOME_DIR/.claude/settings.json"     "$DOTFILES_DIR/claude/settings.json"
 verify_link "$HOME_DIR/.claude/CLAUDE.md"         "$DOTFILES_DIR/claude/CLAUDE.md"
 verify_link "$HOME_DIR/.claude/rules"             "$DOTFILES_DIR/claude/rules"
+verify_link "$HOME_DIR/.claude/hooks"             "$DOTFILES_DIR/claude/hooks"
 verify_link "$HOME_DIR/.claude/skills"            "$AGENT_SKILLS_DIR"
 verify_link "$HOME_DIR/.gemini/config/AGENTS.md"  "$DOTFILES_DIR/antigravity/AGENTS.md"
 verify_link "$HOME_DIR/.config/zed/settings.json" "$DOTFILES_DIR/zed/settings.json"
