@@ -82,9 +82,6 @@ if [[ -z "$CLAUDECODE" ]]; then
 
   # modern CLI replacements
   alias grep='rg'
-  alias du='dust'
-  alias ps='procs'
-  alias top='btm'
   alias rm='rip'
 fi
 
