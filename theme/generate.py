@@ -39,6 +39,7 @@ def generate_palette_toml(colors: dict[str, str], out: Path) -> None:
 
 def update_starship_toml(colors: dict[str, str], starship_file: Path) -> None:
     content = starship_file.read_text()
+    header = "# このセクションは theme/generate.py で自動生成されます。直接編集しないこと\n"
     marker = "[palettes.custom]"
     idx = content.find(marker)
     if idx == -1:
@@ -47,9 +48,12 @@ def update_starship_toml(colors: dict[str, str], starship_file: Path) -> None:
             file=sys.stderr,
         )
         return
+    # 直前の自動生成コメントも置き換え対象に含め、実行のたびに重複しないようにする
+    while content[:idx].endswith(header):
+        idx -= len(header)
     palette_block = (
-        "# このセクションは theme/generate.py で自動生成されます。直接編集しないこと\n"
-        "[palettes.custom]\n"
+        header
+        + "[palettes.custom]\n"
         + "".join(f'{k} = "{v}"\n' for k, v in sorted(colors.items()))
     )
     starship_file.write_text(content[:idx] + palette_block)
