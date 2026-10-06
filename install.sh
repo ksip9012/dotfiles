@@ -118,6 +118,7 @@ link_file "$DOTFILES_DIR/gh/config.yml"            "$HOME_DIR/.config/gh/config.
 # Claude Code
 link_file "$DOTFILES_DIR/claude/settings.json"     "$HOME_DIR/.claude/settings.json"
 link_file "$DOTFILES_DIR/claude/CLAUDE.md"         "$HOME_DIR/.claude/CLAUDE.md"
+link_file "$DOTFILES_DIR/claude/rules"             "$HOME_DIR/.claude/rules"
 
 # Agent Skills (別リポジトリ: https://github.com/ksip9012/agent-skills)
 AGENT_SKILLS_DIR="$HOME_DIR/.claude-skills"
@@ -179,6 +180,7 @@ verify_link "$HOME_DIR/.config/aerospace"         "$DOTFILES_DIR/aerospace"
 verify_link "$HOME_DIR/.newsboat"                 "$DOTFILES_DIR/newsboat"
 verify_link "$HOME_DIR/.claude/settings.json"     "$DOTFILES_DIR/claude/settings.json"
 verify_link "$HOME_DIR/.claude/CLAUDE.md"         "$DOTFILES_DIR/claude/CLAUDE.md"
+verify_link "$HOME_DIR/.claude/rules"             "$DOTFILES_DIR/claude/rules"
 verify_link "$HOME_DIR/.claude/skills"            "$AGENT_SKILLS_DIR"
 verify_link "$HOME_DIR/.config/zed/settings.json" "$DOTFILES_DIR/zed/settings.json"
 verify_link "$HOME_DIR/.config/gh/config.yml"     "$DOTFILES_DIR/gh/config.yml"

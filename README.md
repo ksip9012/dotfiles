@@ -95,6 +95,7 @@ cd ~/.dotfiles
 | `git/.config/git/config` | `~/.config/git/config` |
 | `claude/settings.json` | `~/.claude/settings.json` |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` |
+| `claude/rules/` | `~/.claude/rules/` |
 | `zed/settings.json` | `~/.config/zed/settings.json` |
 | `gh/config.yml` | `~/.config/gh/config.yml` |
 

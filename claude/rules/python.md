@@ -1,3 +1,9 @@
+---
+paths:
+  - "**/*.py"
+  - "**/pyproject.toml"
+---
+
 # Python コーディング規約
 
 ## 設計哲学 (PEP-20: Zen of Python)
