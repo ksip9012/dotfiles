@@ -92,6 +92,7 @@ link_file "$DOTFILES_DIR/zsh/.zsh.d"              "$HOME_DIR/.zsh.d"
 
 # Git
 link_file "$DOTFILES_DIR/git/.config/git/config"  "$HOME_DIR/.config/git/config"
+link_file "$DOTFILES_DIR/git/.config/git/ignore"  "$HOME_DIR/.config/git/ignore"
 
 # WezTerm (XDG: ~/.config/wezterm/wezterm.lua)
 link_file "$DOTFILES_DIR/wezterm/wezterm.lua"       "$HOME_DIR/.config/wezterm/wezterm.lua"
@@ -117,6 +118,11 @@ link_file "$DOTFILES_DIR/gh/config.yml"            "$HOME_DIR/.config/gh/config.
 # Claude Code
 link_file "$DOTFILES_DIR/claude/settings.json"     "$HOME_DIR/.claude/settings.json"
 link_file "$DOTFILES_DIR/claude/CLAUDE.md"         "$HOME_DIR/.claude/CLAUDE.md"
+link_file "$DOTFILES_DIR/claude/rules"             "$HOME_DIR/.claude/rules"
+link_file "$DOTFILES_DIR/claude/hooks"             "$HOME_DIR/.claude/hooks"
+
+# Antigravity CLI（設定ファイルは GCP プロジェクト等を含むためリンクしない）
+link_file "$DOTFILES_DIR/antigravity/AGENTS.md"    "$HOME_DIR/.gemini/config/AGENTS.md"
 
 # Agent Skills (別リポジトリ: https://github.com/ksip9012/agent-skills)
 AGENT_SKILLS_DIR="$HOME_DIR/.claude-skills"
@@ -168,6 +174,7 @@ echo "🔍 Verifying symlinks..."
 verify_link "$HOME_DIR/.zshrc"                    "$DOTFILES_DIR/zsh/.zshrc"
 verify_link "$HOME_DIR/.zsh.d"                    "$DOTFILES_DIR/zsh/.zsh.d"
 verify_link "$HOME_DIR/.config/git/config"        "$DOTFILES_DIR/git/.config/git/config"
+verify_link "$HOME_DIR/.config/git/ignore"        "$DOTFILES_DIR/git/.config/git/ignore"
 verify_link "$HOME_DIR/.config/wezterm/wezterm.lua" "$DOTFILES_DIR/wezterm/wezterm.lua"
 verify_link "$HOME_DIR/.config/starship.toml"     "$DOTFILES_DIR/starship/.starship.toml"
 verify_link "$HOME_DIR/.config/mise"              "$DOTFILES_DIR/mise"
@@ -177,7 +184,10 @@ verify_link "$HOME_DIR/.config/aerospace"         "$DOTFILES_DIR/aerospace"
 verify_link "$HOME_DIR/.newsboat"                 "$DOTFILES_DIR/newsboat"
 verify_link "$HOME_DIR/.claude/settings.json"     "$DOTFILES_DIR/claude/settings.json"
 verify_link "$HOME_DIR/.claude/CLAUDE.md"         "$DOTFILES_DIR/claude/CLAUDE.md"
+verify_link "$HOME_DIR/.claude/rules"             "$DOTFILES_DIR/claude/rules"
+verify_link "$HOME_DIR/.claude/hooks"             "$DOTFILES_DIR/claude/hooks"
 verify_link "$HOME_DIR/.claude/skills"            "$AGENT_SKILLS_DIR"
+verify_link "$HOME_DIR/.gemini/config/AGENTS.md"  "$DOTFILES_DIR/antigravity/AGENTS.md"
 verify_link "$HOME_DIR/.config/zed/settings.json" "$DOTFILES_DIR/zed/settings.json"
 verify_link "$HOME_DIR/.config/gh/config.yml"     "$DOTFILES_DIR/gh/config.yml"
 

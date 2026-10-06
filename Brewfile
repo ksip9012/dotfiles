@@ -94,8 +94,6 @@ cask "google-chrome"
 cask "macpass"
 # Open-source music notation software
 cask "musescore"
-# App to write, plan, collaborate, and get organised
-cask "notion"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # Control your tools with a few keystrokes
