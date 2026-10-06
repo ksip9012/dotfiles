@@ -74,7 +74,7 @@ cd ~/.dotfiles
 | git | グローバル設定（delta pager・エイリアス） |
 | [gh](https://cli.github.com/) | GitHub CLI 設定（`~/.config/gh/config.yml`） |
 | [Claude Code](https://claude.ai/code) | 設定・CLAUDE.md（スキルは別リポジトリ [agent-skills](https://github.com/ksip9012/agent-skills) で管理） |
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | 設定 |
+| [Antigravity CLI](https://antigravity.google/product/antigravity-cli) | グローバルルール（AGENTS.md） |
 | VS Code | キーバインド・設定 |
 | [AeroSpace](https://github.com/nikitabobko/AeroSpace) | タイルウィンドウマネージャ |
 | [newsboat](https://newsboat.org/) | RSS リーダー |
@@ -96,6 +96,7 @@ cd ~/.dotfiles
 | `claude/settings.json` | `~/.claude/settings.json` |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` |
 | `claude/rules/` | `~/.claude/rules/` |
+| `antigravity/AGENTS.md` | `~/.gemini/config/AGENTS.md` |
 | `zed/settings.json` | `~/.config/zed/settings.json` |
 | `gh/config.yml` | `~/.config/gh/config.yml` |
 

@@ -120,6 +120,9 @@ link_file "$DOTFILES_DIR/claude/settings.json"     "$HOME_DIR/.claude/settings.j
 link_file "$DOTFILES_DIR/claude/CLAUDE.md"         "$HOME_DIR/.claude/CLAUDE.md"
 link_file "$DOTFILES_DIR/claude/rules"             "$HOME_DIR/.claude/rules"
 
+# Antigravity CLI（設定ファイルは GCP プロジェクト等を含むためリンクしない）
+link_file "$DOTFILES_DIR/antigravity/AGENTS.md"    "$HOME_DIR/.gemini/config/AGENTS.md"
+
 # Agent Skills (別リポジトリ: https://github.com/ksip9012/agent-skills)
 AGENT_SKILLS_DIR="$HOME_DIR/.claude-skills"
 if [ -d "$AGENT_SKILLS_DIR/.git" ]; then
@@ -182,6 +185,7 @@ verify_link "$HOME_DIR/.claude/settings.json"     "$DOTFILES_DIR/claude/settings
 verify_link "$HOME_DIR/.claude/CLAUDE.md"         "$DOTFILES_DIR/claude/CLAUDE.md"
 verify_link "$HOME_DIR/.claude/rules"             "$DOTFILES_DIR/claude/rules"
 verify_link "$HOME_DIR/.claude/skills"            "$AGENT_SKILLS_DIR"
+verify_link "$HOME_DIR/.gemini/config/AGENTS.md"  "$DOTFILES_DIR/antigravity/AGENTS.md"
 verify_link "$HOME_DIR/.config/zed/settings.json" "$DOTFILES_DIR/zed/settings.json"
 verify_link "$HOME_DIR/.config/gh/config.yml"     "$DOTFILES_DIR/gh/config.yml"
 
