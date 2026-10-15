@@ -1,3 +1,5 @@
+# C/C++ and Java libraries for Unicode and globalization
+brew "icu4c@78"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # GNU File, Shell, and Text utilities
@@ -22,8 +24,6 @@ brew "fzf"
 brew "gawk"
 # GitHub command-line tool
 brew "gh"
-# C/C++ and Java libraries for Unicode and globalization
-brew "icu4c@78"
 # GIF image/animation creator/editor
 brew "gifsicle"
 # Distributed revision control system
@@ -155,3 +155,4 @@ vscode "tamasfe.even-better-toml"
 vscode "usernamehw.errorlens"
 vscode "yzane.markdown-pdf"
 vscode "yzhang.markdown-all-in-one"
+uv "pre-commit"
