@@ -49,7 +49,7 @@ function _brew() {
   __brew_run_step "システム診断" "brew doctor"
   __brew_run_step "Brewfile の更新" "brew bundle dump --file=\"$HOME/.dotfiles/Brewfile\" --force"
 
-  # 4. 30日以上前の野ログファイルを削除
+  # 4. 30日以上前のログファイルを削除
   find "$log_dir" -name "brew_*.log" -type f -mtime +30 -delete
   echo "過去30日以上前のファイルを削除しました。"
 
@@ -60,6 +60,9 @@ function _brew() {
 
   echo -e "\n${green}--- ✅ 基盤メンテナンス完了！ (${elapsed}秒) ---${reset}"
   echo -e "${blue}現在: $(brew list --formula | wc -l) Formulae, $(brew list --cask | wc -l) Casks${reset}"
+
+  # Cask の更新でキャッシュされた sudo 認証を破棄
+  sudo -k
 }
 alias mbrew="_brew"
 
