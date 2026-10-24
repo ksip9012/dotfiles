@@ -48,7 +48,6 @@ cd ~/.dotfiles
 | ツール | 用途 |
 |---|---|
 | [Neovim](https://neovim.io/) | エディタ（lazy.nvim / LSP / conform.nvim） |
-| [Zed](https://zed.dev/) | エディタ（`~/.config/zed/settings.json`） |
 | [WezTerm](https://wezfurlong.org/wezterm/) | ターミナル（`~/.config/wezterm/wezterm.lua`） |
 
 ### モダン CLI ツール（エイリアス設定済み）
@@ -98,7 +97,6 @@ cd ~/.dotfiles
 | `claude/rules/` | `~/.claude/rules/` |
 | `claude/hooks/` | `~/.claude/hooks/` |
 | `antigravity/AGENTS.md` | `~/.gemini/config/AGENTS.md` |
-| `zed/settings.json` | `~/.config/zed/settings.json` |
 | `gh/config.yml` | `~/.config/gh/config.yml` |
 
 ### zsh 設定の分割構造

@@ -109,9 +109,6 @@ link_file "$DOTFILES_DIR/aerospace"                "$HOME_DIR/.config/aerospace"
 # Newsboat (If exists)
 link_file "$DOTFILES_DIR/newsboat"                 "$HOME_DIR/.newsboat"
 
-# Zed
-link_file "$DOTFILES_DIR/zed/settings.json"        "$HOME_DIR/.config/zed/settings.json"
-
 # GitHub CLI
 link_file "$DOTFILES_DIR/gh/config.yml"            "$HOME_DIR/.config/gh/config.yml"
 
@@ -188,7 +185,6 @@ verify_link "$HOME_DIR/.claude/rules"             "$DOTFILES_DIR/claude/rules"
 verify_link "$HOME_DIR/.claude/hooks"             "$DOTFILES_DIR/claude/hooks"
 verify_link "$HOME_DIR/.claude/skills"            "$AGENT_SKILLS_DIR"
 verify_link "$HOME_DIR/.gemini/config/AGENTS.md"  "$DOTFILES_DIR/antigravity/AGENTS.md"
-verify_link "$HOME_DIR/.config/zed/settings.json" "$DOTFILES_DIR/zed/settings.json"
 verify_link "$HOME_DIR/.config/gh/config.yml"     "$DOTFILES_DIR/gh/config.yml"
 
 echo ""
