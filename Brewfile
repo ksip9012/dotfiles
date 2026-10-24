@@ -109,7 +109,6 @@ cask "visual-studio-code"
 # GPU-accelerated cross-platform terminal emulator and multiplexer
 cask "wezterm"
 # Multiplayer code editor
-cask "zed"
 vscode "alexcvzz.vscode-sqlite"
 vscode "anthropic.claude-code"
 vscode "bierner.markdown-mermaid"
