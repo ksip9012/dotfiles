@@ -31,6 +31,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `claude/settings.json` | `~/.claude/settings.json` |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` |
 | `gh/config.yml` | `~/.config/gh/config.yml` |
+| `homebrew/curlrc` | `~/.config/homebrew/curlrc`（`HOMEBREW_CURLRC` は `03_env.zsh` で設定） |
 
 `claude/github/` と `claude/python/` は `~/.claude/` へのリンク不要。各プロジェクトの CLAUDE.md から `@~/.dotfiles/claude/<dir>/CLAUDE.md` で参照する。
 

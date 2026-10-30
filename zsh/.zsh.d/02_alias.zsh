@@ -9,6 +9,8 @@ function _brew() {
 
   local date_str=$(date +%Y%m%d_%H%M%S)
   local log_file="$log_dir/brew_${date_str}.log"
+  # curl の失敗記録（~/.config/homebrew/curlrc の write-out が追記する）
+  local curl_log="$log_dir/curl_errors.log"
 
   local blue="\033[1;34m"
   local green="\033[1;32m"
@@ -26,11 +28,25 @@ function _brew() {
   # ヘルパー関数: 進捗の可視化
   __brew_run_step() {
     echo -e "\n${blue}==> $1...${reset}"
-    if eval "$2" 2>&1 | tee -a "$log_file"; then
-      return 0
-    else
+    local curl_lines_before=$(wc -l 2>/dev/null < "$curl_log" || echo 0)
+    local step_status=0
+    eval "$2" 2>&1 | tee -a "$log_file" || step_status=1
+    __brew_record_curl_errors "$2" "$curl_lines_before"
+    if (( step_status != 0 )); then
       echo -e "${red}[!] $1 でエラーが発生しましたが、続行します。${reset}"
     fi
+  }
+
+  # このステップ中に curl が記録した失敗行の前に、時刻とコマンドの見出しを挿入する
+  __brew_record_curl_errors() {
+    local before=$2
+    local after=$(wc -l 2>/dev/null < "$curl_log" || echo 0)
+    (( after > before )) || return 0
+    local header="=== $(date '+%Y-%m-%d %H:%M:%S') $1 ==="
+    awk -v n="$before" -v h="$header" 'NR == n + 1 { print h } 1' "$curl_log" > "$curl_log.tmp" \
+      && mv "$curl_log.tmp" "$curl_log"
+    echo -e "${yellow}[!] curl のダウンロード失敗が $((after - before)) 件ありました（Homebrew が再試行済みの場合もあります）: $curl_log${reset}" \
+      | tee -a "$log_file"
   }
 
   # 1. Homebrew 本体とグローバルツールの更新
