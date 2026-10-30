@@ -112,6 +112,9 @@ link_file "$DOTFILES_DIR/newsboat"                 "$HOME_DIR/.newsboat"
 # GitHub CLI
 link_file "$DOTFILES_DIR/gh/config.yml"            "$HOME_DIR/.config/gh/config.yml"
 
+# Homebrew（HOMEBREW_CURLRC は zsh/.zsh.d/03_env.zsh で設定）
+link_file "$DOTFILES_DIR/homebrew/curlrc"          "$HOME_DIR/.config/homebrew/curlrc"
+
 # Claude Code
 link_file "$DOTFILES_DIR/claude/settings.json"     "$HOME_DIR/.claude/settings.json"
 link_file "$DOTFILES_DIR/claude/CLAUDE.md"         "$HOME_DIR/.claude/CLAUDE.md"
@@ -186,6 +189,7 @@ verify_link "$HOME_DIR/.claude/hooks"             "$DOTFILES_DIR/claude/hooks"
 verify_link "$HOME_DIR/.claude/skills"            "$AGENT_SKILLS_DIR"
 verify_link "$HOME_DIR/.gemini/config/AGENTS.md"  "$DOTFILES_DIR/antigravity/AGENTS.md"
 verify_link "$HOME_DIR/.config/gh/config.yml"     "$DOTFILES_DIR/gh/config.yml"
+verify_link "$HOME_DIR/.config/homebrew/curlrc"   "$DOTFILES_DIR/homebrew/curlrc"
 
 echo ""
 echo "✅ Dotfiles setup complete!"
