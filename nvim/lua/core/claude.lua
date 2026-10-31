@@ -9,6 +9,15 @@ local M = {}
 
 local root        -- 待ち受けを始めたディレクトリ（Bash で変わったファイルを探す範囲）
 local turn_start  -- 今のターンが始まった時刻
+local baselines = {} -- このターンで Claude が最初に編集する前の内容（パス → 行のリスト）
+
+-- Claude がこのターンに変えた行の印（gitsigns より優先して出す）
+local ns = vim.api.nvim_create_namespace('claude_changes')
+local signs = {
+  add    = { text = '┃', hl = 'ClaudeAdd' },
+  change = { text = '┃', hl = 'ClaudeChange' },
+  delete = { text = '▸', hl = 'ClaudeDelete' },
+}
 
 local function socket_path(dir)
   local real = vim.uv.fs_realpath(dir) or dir
@@ -36,7 +45,59 @@ local function reload_unmodified()
   end
 end
 
+-- 編集前の内容: 開いているバッファ（まだ読み込み直していない）→ git の HEAD の順に探す。
+-- git の管理下で HEAD にないファイルは新しく作ったものとして空にする
+local function read_baseline(path)
+  local buf = vim.fn.bufnr(path)
+  if buf ~= -1 and vim.api.nvim_buf_is_loaded(buf) and not vim.bo[buf].modified then
+    return vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  end
+  local git = { 'git', '-C', vim.fs.dirname(path) }
+  local res = vim.system(vim.list_extend(vim.list_extend({}, git),
+    { 'show', 'HEAD:./' .. vim.fs.basename(path) }), { text = true }):wait()
+  if res.code == 0 then
+    local lines = vim.split(res.stdout, '\n', { plain = true })
+    if lines[#lines] == '' then table.remove(lines) end
+    return lines
+  end
+  res = vim.system(vim.list_extend(vim.list_extend({}, git), { 'rev-parse' })):wait()
+  if res.code == 0 then return {} end
+end
+
+local function as_text(lines)
+  return #lines == 0 and '' or table.concat(lines, '\n') .. '\n'
+end
+
+-- 編集前の内容と今のバッファを比べて、変わった行に印を付け直す
+local function mark_changes(path)
+  local base = baselines[path]
+  local buf = vim.fn.bufnr(path)
+  if not base or buf == -1 or not vim.api.nvim_buf_is_loaded(buf) or vim.bo[buf].modified then
+    return
+  end
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  local hunks = vim.text.diff(as_text(base), as_text(lines), { result_type = 'indices' })
+  vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+  local function put(lnum, sign)
+    lnum = math.min(math.max(lnum, 1), #lines)
+    vim.api.nvim_buf_set_extmark(buf, ns, lnum - 1, 0,
+      { sign_text = sign.text, sign_hl_group = sign.hl, priority = 20 })
+  end
+  for _, h in ipairs(hunks) do
+    local _, count_a, start_b, count_b = unpack(h)
+    if count_b == 0 then
+      put(start_b, signs.delete) -- 消した行のすぐ上の行
+    else
+      local sign = count_a == 0 and signs.add or signs.change
+      for lnum = start_b, start_b + count_b - 1 do put(lnum, sign) end
+    end
+  end
+end
+
 function M.setup()
+  vim.api.nvim_set_hl(0, 'ClaudeAdd', { link = 'Added', default = true })
+  vim.api.nvim_set_hl(0, 'ClaudeChange', { link = 'Changed', default = true })
+  vim.api.nvim_set_hl(0, 'ClaudeDelete', { link = 'Removed', default = true })
   vim.o.autoread = true
   vim.api.nvim_create_autocmd('FocusGained', {
     group = vim.api.nvim_create_augroup('ClaudeReload', { clear = true }),
@@ -101,11 +162,14 @@ local function show(path, line, verb)
 end
 
 -- PostToolUse (Edit/Write) から呼ばれる
+-- 編集前の内容は、読み込み直す前に取る必要があるので schedule の外で取る
 function M.open(path, needle)
+  if baselines[path] == nil then baselines[path] = read_baseline(path) or false end
   vim.schedule(function()
     show(path, function()
       return (needle and needle ~= '' and find_line(needle)) or first_changed_line(path)
     end, '変更し')
+    mark_changes(path)
   end)
   return ''
 end
@@ -116,9 +180,15 @@ function M.view(path, line)
   return ''
 end
 
--- UserPromptSubmit から呼ばれる
+-- UserPromptSubmit から呼ばれる。前のターンの変更の印は消す
 function M.mark()
   turn_start = os.time()
+  baselines = {}
+  vim.schedule(function()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+    end
+  end)
   return ''
 end
 
