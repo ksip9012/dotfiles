@@ -231,7 +231,7 @@ local function changed_files()
   return paths, #list - #paths
 end
 
--- ファイルを表示する、左から順のウィンドウ（NvimTree や浮いているウィンドウは除く）
+-- ファイルを表示する、上から（同じ高さなら左から）順のウィンドウ（NvimTree や浮いているウィンドウは除く）
 local function file_windows()
   local wins = {}
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
@@ -242,13 +242,33 @@ local function file_windows()
     end
   end
   table.sort(wins, function(a, b)
-    return vim.api.nvim_win_get_position(a)[2] < vim.api.nvim_win_get_position(b)[2]
+    local pa, pb = vim.api.nvim_win_get_position(a), vim.api.nvim_win_get_position(b)
+    return pa[1] ~= pb[1] and pa[1] < pb[1] or (pa[1] == pb[1] and pa[2] < pb[2])
   end)
   return wins
 end
 
+-- ファイルのウィンドウを、今の順のまま上下に積み直す（NvimTree は元の幅で左に戻す）
+local function stack()
+  local wins = file_windows()
+  local tree
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == 'NvimTree' then
+      tree = { win = win, width = vim.api.nvim_win_get_width(win) }
+    end
+  end
+  for i = #wins, 1, -1 do
+    vim.api.nvim_win_call(wins[i], function() vim.cmd.wincmd('K') end)
+  end
+  if tree then
+    vim.api.nvim_win_call(tree.win, function() vim.cmd.wincmd('H') end)
+    vim.api.nvim_win_set_width(tree.win, tree.width)
+  end
+end
+
 -- paths をすべてウィンドウに並べる。すでに表示中のものはそのまま残し、
--- 足りない分は関係のないファイルを出しているウィンドウ（右から）を使い、なければ右に分割する
+-- 足りない分は関係のないファイルを出しているウィンドウ（後ろから）を使い、なければ下に分割する。
+-- 最後に上下に積み直す
 local function arrange(paths)
   local wanted, shown, free = {}, {}, {}
   for _, path in ipairs(paths) do wanted[path] = true end
@@ -260,7 +280,7 @@ local function arrange(paths)
       table.insert(free, win)
     end
   end
-  -- 使うのは右側のウィンドウから必要な数だけ。左から変わった順に入れる
+  -- 使うのは後ろのウィンドウから必要な数だけ。前から変わった順に入れる
   local needed = 0
   for _, path in ipairs(paths) do
     if not shown[path] then needed = needed + 1 end
@@ -277,7 +297,7 @@ local function arrange(paths)
       else
         local wins = file_windows()
         if #wins > 0 then vim.api.nvim_set_current_win(wins[#wins]) end
-        ok = pcall(vim.cmd, 'rightbelow vsplit ' .. vim.fn.fnameescape(path))
+        ok = pcall(vim.cmd, 'belowright split ' .. vim.fn.fnameescape(path))
         win = vim.api.nvim_get_current_win()
       end
       if ok then
@@ -292,6 +312,7 @@ local function arrange(paths)
     end
     placed = win
   end
+  stack()
   vim.cmd('wincmd =')
   if placed and vim.api.nvim_win_is_valid(placed) then vim.api.nvim_set_current_win(placed) end
 end
