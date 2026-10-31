@@ -77,7 +77,9 @@ case "$1" in
         input=$(cat)
         file_path=$(jq -r '.tool_input.file_path // empty' <<<"$input" 2>/dev/null)
         # スキルや設定ファイルまで開かないよう、プロジェクト内のテキストファイルに限る
+        # （プロジェクト内でも .claude/ などの隠しディレクトリにあるものは開かない）
         case "$(realpath "$file_path" 2>/dev/null)" in
+            "$project_dir"/.* | "$project_dir"/*/.*) exit 0 ;;
             "$project_dir"/*) ;;
             *) exit 0 ;;
         esac

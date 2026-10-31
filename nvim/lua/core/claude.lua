@@ -175,8 +175,17 @@ function M.open(path, needle)
 end
 
 -- PostToolUse (Read) から呼ばれる
+-- 読んだだけのファイルで、このターンに編集したファイルの表示を押し出さない
+-- （すでにどこかのウィンドウに出ていれば、そこへ移るだけなので開く）
 function M.view(path, line)
-  vim.schedule(function() show(path, line, '読み') end)
+  vim.schedule(function()
+    local current = vim.api.nvim_buf_get_name(0)
+    if vim.fn.bufwinnr(path) == -1 and baselines[current] then
+      vim.notify('Claude: ' .. vim.fn.fnamemodify(path, ':~:.') .. ' を読みました')
+      return
+    end
+    show(path, line, '読み')
+  end)
   return ''
 end
 
