@@ -201,26 +201,117 @@ function M.mark()
   return ''
 end
 
--- Stop から呼ばれる。このターンに変わったファイルのうち最後のものを開く
+-- 返答の終わりに並べるのは、人が読むファイルだけ（機械が読むデータは並べない）
+local skip_ext = { jsonl = true, json = true, csv = true, tsv = true, lock = true, log = true }
+local max_windows = 4
+
+-- このターンに変わったファイル（Edit/Write したもの + Bash などで変わったもの）を、変わった順に
+local function changed_files()
+  local files = {}
+  for path in pairs(baselines) do files[path] = true end
+  local res = vim.system({ 'git', '-C', root, 'ls-files', '-co', '--exclude-standard' },
+    { text = true }):wait()
+  if res.code == 0 then
+    for rel in res.stdout:gmatch('[^\n]+') do
+      local stat = vim.uv.fs_stat(root .. '/' .. rel)
+      if stat and stat.mtime.sec >= turn_start then files[root .. '/' .. rel] = true end
+    end
+  end
+  local list = {}
+  for path in pairs(files) do
+    local ext = path:match('%.(%w+)$')
+    local stat = vim.uv.fs_stat(path)
+    if stat and stat.type == 'file' and not (ext and skip_ext[ext:lower()]) then
+      table.insert(list, { path = path, mtime = stat.mtime.nsec + stat.mtime.sec * 1e9 })
+    end
+  end
+  table.sort(list, function(a, b) return a.mtime < b.mtime end)
+  local paths = {}
+  for i = math.max(#list - max_windows + 1, 1), #list do table.insert(paths, list[i].path) end
+  return paths, #list - #paths
+end
+
+-- ファイルを表示する、左から順のウィンドウ（NvimTree や浮いているウィンドウは除く）
+local function file_windows()
+  local wins = {}
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.api.nvim_win_get_config(win).relative == '' and vim.bo[buf].buftype == ''
+        and vim.bo[buf].filetype ~= 'NvimTree' then
+      table.insert(wins, win)
+    end
+  end
+  table.sort(wins, function(a, b)
+    return vim.api.nvim_win_get_position(a)[2] < vim.api.nvim_win_get_position(b)[2]
+  end)
+  return wins
+end
+
+-- paths をすべてウィンドウに並べる。すでに表示中のものはそのまま残し、
+-- 足りない分は関係のないファイルを出しているウィンドウ（右から）を使い、なければ右に分割する
+local function arrange(paths)
+  local wanted, shown, free = {}, {}, {}
+  for _, path in ipairs(paths) do wanted[path] = true end
+  for _, win in ipairs(file_windows()) do
+    local name = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win))
+    if wanted[name] and not shown[name] then
+      shown[name] = win
+    elseif not vim.bo[vim.api.nvim_win_get_buf(win)].modified then
+      table.insert(free, win)
+    end
+  end
+  -- 使うのは右側のウィンドウから必要な数だけ。左から変わった順に入れる
+  local needed = 0
+  for _, path in ipairs(paths) do
+    if not shown[path] then needed = needed + 1 end
+  end
+  free = vim.list_slice(free, math.max(#free - needed + 1, 1))
+  local placed
+  for _, path in ipairs(paths) do
+    local win = shown[path]
+    if not win then
+      win = table.remove(free, 1)
+      local ok
+      if win then
+        ok = pcall(vim.api.nvim_win_call, win, function() vim.cmd.edit(vim.fn.fnameescape(path)) end)
+      else
+        local wins = file_windows()
+        if #wins > 0 then vim.api.nvim_set_current_win(wins[#wins]) end
+        ok = pcall(vim.cmd, 'rightbelow vsplit ' .. vim.fn.fnameescape(path))
+        win = vim.api.nvim_get_current_win()
+      end
+      if ok then
+        local line = first_changed_line(path)
+        if line then
+          local count = vim.api.nvim_buf_line_count(vim.api.nvim_win_get_buf(win))
+          vim.api.nvim_win_set_cursor(win, { math.min(line, count), 0 })
+          vim.api.nvim_win_call(win, function() vim.cmd('normal! zz') end)
+        end
+        mark_changes(path)
+      end
+    end
+    placed = win
+  end
+  vim.cmd('wincmd =')
+  if placed and vim.api.nvim_win_is_valid(placed) then vim.api.nvim_set_current_win(placed) end
+end
+
+-- Stop から呼ばれる。このターンに変わったファイルをすべて並べる
 -- （すでに表示中なら、Edit で移動した位置を保つため開き直さない）
 function M.sync()
   vim.schedule(function()
     reload_unmodified()
     if not (turn_start and root) then return end
-    local res = vim.system({ 'git', '-C', root, 'ls-files', '-co', '--exclude-standard' },
-      { text = true }):wait()
-    if res.code ~= 0 then return end
-    local latest, latest_sec = nil, turn_start - 1
-    for rel in res.stdout:gmatch('[^\n]+') do
-      local path = root .. '/' .. rel
-      local stat = vim.uv.fs_stat(path)
-      if stat and stat.mtime.sec > latest_sec then
-        latest, latest_sec = path, stat.mtime.sec
-      end
-    end
+    local paths, hidden = changed_files()
     turn_start = nil
-    if latest and latest ~= vim.api.nvim_buf_get_name(0) then
-      show(latest, function() return first_changed_line(latest) end, '変更し')
+    if #paths == 0 then return end
+    if vim.bo.modified or vim.fn.mode() ~= 'n' or vim.fn.getcmdwintype() ~= '' then
+      vim.notify('Claude: ' .. #paths .. ' 個のファイルを変更しました')
+      return
+    end
+    arrange(paths)
+    if hidden > 0 then
+      vim.notify('Claude: ほかに ' .. hidden .. ' 個のファイルを変更しました（並べきれないので省略）')
     end
   end)
   return ''
