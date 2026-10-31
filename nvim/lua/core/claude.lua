@@ -9,7 +9,6 @@ local M = {}
 
 local root        -- 待ち受けを始めたディレクトリ（Bash で変わったファイルを探す範囲）
 local turn_start  -- 今のターンが始まった時刻
-local shown       -- このターンで open() が開いたファイル
 
 local function socket_path(dir)
   local real = vim.uv.fs_realpath(dir) or dir
@@ -81,9 +80,10 @@ local function busy(path)
     or (buf ~= -1 and vim.bo[buf].modified)
 end
 
-local function show(path, needle)
+-- path を開き、line（関数なら開いた後に呼んで求める）の行へ移動する
+local function show(path, line, verb)
   if busy(path) then
-    vim.notify('Claude: ' .. vim.fn.fnamemodify(path, ':~:.') .. ' を変更しました')
+    vim.notify('Claude: ' .. vim.fn.fnamemodify(path, ':~:.') .. ' を' .. verb .. 'ました')
     return
   end
   if vim.bo.filetype == 'NvimTree' then vim.cmd.wincmd('p') end
@@ -93,7 +93,7 @@ local function show(path, needle)
     return
   end
   vim.cmd.checktime(vim.api.nvim_get_current_buf())
-  local line = (needle ~= '' and find_line(needle)) or first_changed_line(path)
+  if type(line) == 'function' then line = line() end
   if line then
     vim.api.nvim_win_set_cursor(0, { math.min(line, vim.api.nvim_buf_line_count(0)), 0 })
     vim.cmd('normal! zz')
@@ -103,21 +103,27 @@ end
 -- PostToolUse (Edit/Write) から呼ばれる
 function M.open(path, needle)
   vim.schedule(function()
-    shown = path
-    show(path, needle or '')
+    show(path, function()
+      return (needle and needle ~= '' and find_line(needle)) or first_changed_line(path)
+    end, '変更し')
   end)
+  return ''
+end
+
+-- PostToolUse (Read) から呼ばれる
+function M.view(path, line)
+  vim.schedule(function() show(path, line, '読み') end)
   return ''
 end
 
 -- UserPromptSubmit から呼ばれる
 function M.mark()
   turn_start = os.time()
-  shown = nil
   return ''
 end
 
 -- Stop から呼ばれる。このターンに変わったファイルのうち最後のものを開く
--- （Edit/Write で開いたものと同じなら開き直さない）
+-- （すでに表示中なら、Edit で移動した位置を保つため開き直さない）
 function M.sync()
   vim.schedule(function()
     reload_unmodified()
@@ -134,7 +140,9 @@ function M.sync()
       end
     end
     turn_start = nil
-    if latest and latest ~= shown then show(latest, '') end
+    if latest and latest ~= vim.api.nvim_buf_get_name(0) then
+      show(latest, function() return first_changed_line(latest) end, '変更し')
+    end
   end)
   return ''
 end

@@ -23,6 +23,15 @@
             "command": "~/.claude/hooks/nvim-follow.sh open"
           }
         ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/nvim-follow.sh view"
+          }
+        ]
       }
     ],
     "Stop": [
