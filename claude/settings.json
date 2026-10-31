@@ -6,17 +6,31 @@
           {
             "type": "command",
             "command": "LC_TIME=ja_JP.UTF-8 date '+現在日時: %Y-%m-%d (%a) %H:%M %Z'"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/nvim-follow.sh mark"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/open-in-nvim.sh"
+            "command": "~/.claude/hooks/nvim-follow.sh open"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/nvim-follow.sh sync"
           }
         ]
       }
