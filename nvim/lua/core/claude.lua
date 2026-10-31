@@ -98,6 +98,10 @@ function M.setup()
   vim.api.nvim_set_hl(0, 'ClaudeAdd', { link = 'Added', default = true })
   vim.api.nvim_set_hl(0, 'ClaudeChange', { link = 'Changed', default = true })
   vim.api.nvim_set_hl(0, 'ClaudeDelete', { link = 'Removed', default = true })
+  vim.api.nvim_create_user_command('ClaudePin', function(opts) M.pin(opts.args) end,
+    { nargs = '?', complete = 'file', desc = 'Claude: このウィンドウ（またはファイル）を左に固定する' })
+  vim.api.nvim_create_user_command('ClaudeUnpin', function() M.unpin() end,
+    { desc = 'Claude: 左の固定を外す' })
   vim.o.autoread = true
   vim.api.nvim_create_autocmd('FocusGained', {
     group = vim.api.nvim_create_augroup('ClaudeReload', { clear = true }),
@@ -141,6 +145,43 @@ local function busy(path)
     or (buf ~= -1 and vim.bo[buf].modified)
 end
 
+-- 左に固定したウィンドウ（:ClaudePin）。Claude が開くファイルはここを使わず、右の列に出す
+local function pinned_window()
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.w[win].claude_pinned then return win end
+  end
+end
+
+-- ファイルを表示する、上から（同じ高さなら左から）順のウィンドウ（NvimTree や浮いているウィンドウは除く）
+local function file_windows()
+  local wins = {}
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.api.nvim_win_get_config(win).relative == '' and vim.bo[buf].buftype == ''
+        and vim.bo[buf].filetype ~= 'NvimTree' then
+      table.insert(wins, win)
+    end
+  end
+  table.sort(wins, function(a, b)
+    local pa, pb = vim.api.nvim_win_get_position(a), vim.api.nvim_win_get_position(b)
+    return pa[1] ~= pb[1] and pa[1] < pb[1] or (pa[1] == pb[1] and pa[2] < pb[2])
+  end)
+  return wins
+end
+
+-- 固定したウィンドウにいたら、右の列のウィンドウへ移る（なければ右に作る）
+local function leave_pinned()
+  local pin = pinned_window()
+  if vim.api.nvim_get_current_win() ~= pin then return end
+  for _, win in ipairs(file_windows()) do
+    if win ~= pin then
+      vim.api.nvim_set_current_win(win)
+      return
+    end
+  end
+  vim.cmd('belowright vsplit')
+end
+
 -- path を開き、line（関数なら開いた後に呼んで求める）の行へ移動する
 local function show(path, line, verb)
   if busy(path) then
@@ -148,6 +189,7 @@ local function show(path, line, verb)
     return
   end
   if vim.bo.filetype == 'NvimTree' then vim.cmd.wincmd('p') end
+  if vim.fn.bufwinid(path) == -1 then leave_pinned() end
   local ok, err = pcall(vim.cmd.drop, vim.fn.fnameescape(path))
   if not ok then
     vim.notify('Claude: ' .. err, vim.log.levels.WARN)
@@ -231,45 +273,87 @@ local function changed_files()
   return paths, #list - #paths
 end
 
--- ファイルを表示する、上から（同じ高さなら左から）順のウィンドウ（NvimTree や浮いているウィンドウは除く）
-local function file_windows()
-  local wins = {}
-  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    if vim.api.nvim_win_get_config(win).relative == '' and vim.bo[buf].buftype == ''
-        and vim.bo[buf].filetype ~= 'NvimTree' then
-      table.insert(wins, win)
-    end
-  end
-  table.sort(wins, function(a, b)
-    local pa, pb = vim.api.nvim_win_get_position(a), vim.api.nvim_win_get_position(b)
-    return pa[1] ~= pb[1] and pa[1] < pb[1] or (pa[1] == pb[1] and pa[2] < pb[2])
-  end)
-  return wins
-end
-
--- ファイルのウィンドウを、今の順のまま上下に積み直す（NvimTree は元の幅で左に戻す）
-local function stack()
-  local wins = file_windows()
-  local tree
+-- ウィンドウを動かす前に NvimTree の幅を覚え、動かしたあと元の幅で左に戻す
+local function find_tree()
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
     if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == 'NvimTree' then
-      tree = { win = win, width = vim.api.nvim_win_get_width(win) }
+      return { win = win, width = vim.api.nvim_win_get_width(win) }
     end
   end
+end
+
+local function restore_tree(tree)
+  if not (tree and vim.api.nvim_win_is_valid(tree.win)) then return end
+  vim.api.nvim_win_call(tree.win, function() vim.cmd.wincmd('H') end)
+  vim.api.nvim_win_set_width(tree.win, tree.width)
+end
+
+-- path の最初に変わった行へ win のカーソルを移す
+local function jump_to_change(win, path)
+  local line = first_changed_line(path)
+  if not line then return end
+  local count = vim.api.nvim_buf_line_count(vim.api.nvim_win_get_buf(win))
+  vim.api.nvim_win_set_cursor(win, { math.min(line, count), 0 })
+  vim.api.nvim_win_call(win, function() vim.cmd('normal! zz') end)
+end
+
+-- ファイルのウィンドウを、今の順のまま上下に積み直す
+local function stack()
+  local wins = file_windows()
+  local tree = find_tree()
   for i = #wins, 1, -1 do
     vim.api.nvim_win_call(wins[i], function() vim.cmd.wincmd('K') end)
   end
-  if tree then
-    vim.api.nvim_win_call(tree.win, function() vim.cmd.wincmd('H') end)
-    vim.api.nvim_win_set_width(tree.win, tree.width)
-  end
+  restore_tree(tree)
 end
 
--- paths をすべてウィンドウに並べる。すでに表示中のものはそのまま残し、
--- 足りない分は関係のないファイルを出しているウィンドウ（後ろから）を使い、なければ下に分割する。
--- 最後に上下に積み直す
+-- 固定したウィンドウの右に 1列を作り、paths を上から順に積む。
+-- 右にあったウィンドウは 1つに畳んでから分割し直す（hidden なのでバッファは残る）
+local function fill_right(pin, paths, jump)
+  local tree = find_tree()
+  local rights = vim.tbl_filter(function(win) return win ~= pin end, file_windows())
+  local col
+  if #rights == 0 then
+    vim.api.nvim_set_current_win(pin)
+    vim.cmd('belowright vsplit')
+    col = vim.api.nvim_get_current_win()
+  else
+    col = rights[1]
+    for i = 2, #rights do pcall(vim.api.nvim_win_close, rights[i], false) end
+    vim.api.nvim_win_call(col, function() vim.cmd.wincmd('L') end)
+  end
+  local wins = { col }
+  for _ = 2, #paths do
+    vim.api.nvim_set_current_win(wins[#wins])
+    vim.cmd('belowright split')
+    table.insert(wins, vim.api.nvim_get_current_win())
+  end
+  for i, path in ipairs(paths) do
+    local win = wins[i]
+    if vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win)) ~= path then
+      local ok = pcall(vim.api.nvim_win_call, win, function() vim.cmd.edit(vim.fn.fnameescape(path)) end)
+      if ok and jump then jump_to_change(win, path) end
+    end
+    mark_changes(path)
+  end
+  restore_tree(tree)
+  vim.cmd('wincmd =')
+  vim.api.nvim_set_current_win(wins[#wins])
+end
+
+-- paths をすべてウィンドウに並べる。
+-- 固定したウィンドウがあれば、そこに出ていないものを右の列に積む。
+-- なければ、すでに表示中のものはそのまま残し、足りない分は関係のないファイルを出している
+-- ウィンドウ（後ろから）を使い、なければ下に分割する。最後に上下に積み直す
 local function arrange(paths)
+  local pin = pinned_window()
+  if pin then
+    local pinned_name = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(pin))
+    local right = vim.tbl_filter(function(path) return path ~= pinned_name end, paths)
+    if #right > 0 then fill_right(pin, right, true) end
+    return
+  end
+
   local wanted, shown, free = {}, {}, {}
   for _, path in ipairs(paths) do wanted[path] = true end
   for _, win in ipairs(file_windows()) do
@@ -301,12 +385,7 @@ local function arrange(paths)
         win = vim.api.nvim_get_current_win()
       end
       if ok then
-        local line = first_changed_line(path)
-        if line then
-          local count = vim.api.nvim_buf_line_count(vim.api.nvim_win_get_buf(win))
-          vim.api.nvim_win_set_cursor(win, { math.min(line, count), 0 })
-          vim.api.nvim_win_call(win, function() vim.cmd('normal! zz') end)
-        end
+        jump_to_change(win, path)
         mark_changes(path)
       end
     end
@@ -335,6 +414,44 @@ function M.sync()
       vim.notify('Claude: ほかに ' .. hidden .. ' 個のファイルを変更しました（並べきれないので省略）')
     end
   end)
+  return ''
+end
+
+-- :ClaudePin [file] と Claude（remote-expr）から呼ばれる。
+-- path（なければ今のウィンドウ）を左に固定し、ほかのウィンドウは右の 1列に積む
+function M.pin(path)
+  vim.schedule(function()
+    if vim.bo.filetype == 'NvimTree' then vim.cmd.wincmd('p') end
+    local win = vim.api.nvim_get_current_win()
+    if path and path ~= '' then
+      path = vim.fn.fnamemodify(path, ':p')
+      local shown = vim.fn.bufwinid(path)
+      if shown ~= -1 then
+        win = shown
+      else
+        local ok, err = pcall(vim.cmd.edit, vim.fn.fnameescape(path))
+        if not ok then
+          vim.notify('Claude: ' .. err, vim.log.levels.WARN)
+          return
+        end
+      end
+    end
+    for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do vim.w[w].claude_pinned = nil end
+    vim.w[win].claude_pinned = true
+    local tree = find_tree()
+    vim.api.nvim_win_call(win, function() vim.cmd.wincmd('H') end)
+    restore_tree(tree)
+    local rights = {}
+    for _, w in ipairs(file_windows()) do
+      if w ~= win then table.insert(rights, vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(w))) end
+    end
+    if #rights > 0 then fill_right(win, rights, false) else vim.cmd('wincmd =') end
+  end)
+  return ''
+end
+
+function M.unpin()
+  for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do vim.w[w].claude_pinned = nil end
   return ''
 end
 
