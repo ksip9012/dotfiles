@@ -81,6 +81,24 @@ else
     echo "⚠️ python3 not found. Skipping palette generation."
 fi
 
+# --- WezTerm terminfo ---
+# wezterm.lua で TERM=wezterm にしているので、その terminfo を XDG の場所に入れる（#96）
+echo ""
+TERMINFO_DIR="${XDG_DATA_HOME:-$HOME_DIR/.local/share}/terminfo"
+if TERMINFO_DIRS="$TERMINFO_DIR:" infocmp wezterm >/dev/null 2>&1; then
+    echo "🖥️  WezTerm terminfo already installed, skipping."
+else
+    echo "🖥️  Installing WezTerm terminfo to $TERMINFO_DIR..."
+    tmp_terminfo=$(mktemp)
+    if curl -fsSL -o "$tmp_terminfo" https://raw.githubusercontent.com/wezterm/wezterm/main/termwiz/data/wezterm.terminfo; then
+        mkdir -p "$TERMINFO_DIR"
+        tic -x -o "$TERMINFO_DIR" "$tmp_terminfo"
+    else
+        echo "⚠️ Failed to download WezTerm terminfo. Skipping."
+    fi
+    rm -f "$tmp_terminfo"
+fi
+
 # --- Link configuration files ---
 
 echo ""

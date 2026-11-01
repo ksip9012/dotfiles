@@ -108,6 +108,14 @@ end)
 -- スクロールバック行数
 config.scrollback_lines = 10000
 
+-- 端末の種類を wezterm と名乗る（terminfo は install.sh が ~/.local/share/terminfo に入れる）
+-- xterm-256color のままだと、Neovim が左右に並べたウィンドウの片方だけをスクロールするときに
+-- 左右の余白の命令（DECSLRM）を使い、WezTerm では隣のウィンドウまで一緒に動いて見えるため（#96）
+config.term = "wezterm"
+config.set_environment_variables = {
+  TERMINFO_DIRS = home .. "/.local/share/terminfo:", -- 末尾の : は標準の場所も探す指定
+}
+
 -- IME の確定前の文字列を表示する
 config.use_ime = true
 
