@@ -1,5 +1,3 @@
-# C/C++ and Java libraries for Unicode and globalization
-brew "icu4c@78"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # GNU File, Shell, and Text utilities
