@@ -1,0 +1,40 @@
+# templates/ のひな形を GitHub 上で試す。
+# common と言語のひな形をサンプルのプロジェクトに写し、ひな形の ci.yml と同じ手順
+# （mise-action で版をそろえる → mise run check）で通るかを見る
+name: templates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "templates/**"
+      - ".github/workflows/templates.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "templates/**"
+      - ".github/workflows/templates.yml"
+
+jobs:
+  python:
+    name: python template
+    runs-on: ubuntu-latest
+    env:
+      SAMPLE: ${{ github.workspace }}/sample
+      # ひな形の ci.yml と同じく、サンプルの mise.toml を信頼させる
+      MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}/sample
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build sample project from templates
+        run: |
+          mkdir -p "$SAMPLE"
+          cp -R templates/common/. "$SAMPLE/"
+          cp -R templates/python/. "$SAMPLE/"
+          cat templates/common/.gitignore templates/python/.gitignore > "$SAMPLE/.gitignore"
+          echo "# sample" > "$SAMPLE/README.md"
+      - uses: jdx/mise-action@v5
+        with:
+          working_directory: sample
+      - name: mise run check
+        working-directory: sample
+        run: mise run check
