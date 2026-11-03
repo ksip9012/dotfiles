@@ -33,7 +33,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `gh/config.yml` | `~/.config/gh/config.yml` |
 | `homebrew/curlrc` | `~/.config/homebrew/curlrc`（`HOMEBREW_CURLRC` は `03_env.zsh` で設定） |
 
-`claude/github/` と `claude/python/` は `~/.claude/` へのリンク不要。各プロジェクトの CLAUDE.md から `@~/.dotfiles/claude/<dir>/CLAUDE.md` で参照する。
+`claude/rules/` は `~/.claude/rules` にリンクする（GitHub の運用と、言語ごとのコードの書き方）。
+
+### 開発のひな形と決めごと
+
+- `templates/`: 新しいプロジェクトに置く土台（共通 `common/` と言語ごと `python/`）。リンクはしない。使い方は `templates/README.md`
+- `rules/<言語>.md` はコードの書き方だけにし、開発環境の設定は `templates/` のひな形に置く。環境を変えるときはひな形を直す（`decisions/0002`）
+- `decisions/`: dotfiles の設計の決めごと（ADR）。大きな決めごとをしたら、`decisions/0000-template.md` を写して足す
 
 ### zsh 設定の分割構造
 

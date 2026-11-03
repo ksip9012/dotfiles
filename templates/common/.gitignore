@@ -1,0 +1,8 @@
+# OS
+.DS_Store
+
+# 手元だけの設定と秘密の値
+mise.local.toml
+.env
+.env.*
+!.env.example

@@ -1,0 +1,26 @@
+[tools]
+python = "3.13"
+uv = "0.11.8"
+
+[env]
+# uv が自分で Python を探さず、上の [tools] で mise が入れた Python を使うようにする
+# （版を決める場所を mise.toml の 1か所にする）
+UV_PYTHON_PREFERENCE = "only-system"
+
+# 手元・pre-commit・CI で同じチェックを動かす（decisions/0003）
+# ruff・pyright・pytest の版は uv.lock で固定する
+[tasks.check]
+description = "lint・format・型チェック・速いテスト"
+run = [
+  "uv run ruff check .",
+  "uv run ruff format --check .",
+  "uv run pyright",
+  "uv run pytest -m 'not slow'",
+]
+
+[tasks.fix]
+description = "lint の自動修正と format"
+run = [
+  "uv run ruff check --fix .",
+  "uv run ruff format .",
+]
