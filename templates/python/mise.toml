@@ -1,6 +1,7 @@
 [tools]
-python = "3.13"
-uv = "0.11.8"
+# 版の選び方: Python は最新の 1つ前のマイナー版。毎年 11月に見直す（decisions/0007）
+python = "3.14"
+uv = "0.13.6"
 
 [env]
 # uv が自分で Python を探さず、上の [tools] で mise が入れた Python を使うようにする
