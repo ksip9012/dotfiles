@@ -1,4 +1,6 @@
+# プロジェクトの外で使う道具。プロジェクトの外は最新を追いかけ、mbrew の mise upgrade で上げる。
+# プロジェクトの中は、各プロジェクトの mise.toml で版を固定する（decisions/0008）
 [tools]
-python = ['latest', '3.11.5', '3.12.1']
-node = "25.0.0"
-uv = "0.11.8"
+python = "latest"
+node = "lts"
+uv = "latest"

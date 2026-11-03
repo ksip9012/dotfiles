@@ -50,10 +50,13 @@ function _brew() {
   }
 
   # 1. Homebrew 本体とグローバルツールの更新
-  # これにより git, docker, mise(本体), uv(本体) などが最新になります
+  # これにより git, docker, mise(本体) などが最新になります
   __brew_run_step "Homebrew 定義の更新" "brew update"
   __brew_run_step "グローバルツールのアップグレード" "brew upgrade"
   __brew_run_step "アプリ(Cask)の更新" "brew upgrade --cask --greedy"
+  # mise で入れたプロジェクトの外の道具（python・uv・node）を、mise/config.toml の条件の中で最新にする
+  # プロジェクトの mise.toml を拾わないよう、ホームで動かす（decisions/0008）
+  __brew_run_step "mise の道具の更新" "(cd ~ && mise upgrade)"
 
   # 2. 徹底的な掃除
   # 不要な依存関係(lib...)と古いキャッシュを削除してディスクを空けます
