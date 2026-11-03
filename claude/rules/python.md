@@ -110,7 +110,7 @@ def fetch_user(user_id: int, *, include_deleted: bool = False) -> User:
 
 ### 型ヒント
 
-- 対象 Python バージョン: 3.13 以上
+- 対象 Python バージョン: プロジェクトの `mise.toml` の版以上（新しいプロジェクトは、最新の 1つ前のマイナー版。`~/.dotfiles/decisions/0007`）
 - 組み込みジェネリクス使用: `list[int]` (`List[int]` ではなく)
 - Union は `X | Y` 構文 (`Union[X, Y]` ではなく)
 - Optional は `X | None` (`Optional[X]` ではなく)

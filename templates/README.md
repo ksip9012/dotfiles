@@ -54,4 +54,7 @@ mise run check        # lint・format・型チェック・速いテスト
 - `uv sync` をしなくても、`mise run check` の最初の `uv run` が仮想環境を作って依存を入れる。CI はこれに頼っている
 - `pyproject.toml` は `readme = "README.md"` なので、README.md がないと uv がパッケージを作れない
 - ひな形を直したら、dotfiles の CI（`.github/workflows/templates.yml`）が、ひな形を写したサンプルで同じ手順を GitHub 上で動かして確かめる
-- `python = "3.13"` は 3.13 系の最新を入れるので、手元と CI で細かい版がずれることがある（2026-11-03 は手元 3.13.11、CI 3.13.18）
+- 版の選び方（`../decisions/0007`）: Python は最新の 1つ前のマイナー版。細かい版（パッチ）は固定しない。ひな形は毎年 11月に見直す
+  - Python の版を書くのは `mise.toml` の `[tools]` と `pyproject.toml` の `requires-python` の 2か所。上げるときは両方を直す。pyright は仮想環境の Python から版を読むので書かない
+  - uv の版と `pyproject.toml` の `uv_build` の範囲は組み。uv を上げたら `uv_build` の範囲も合わせる
+  - マイナー版までしか書かないので、手元と CI で細かい版がずれることがある（2026-11-03 は手元 3.13.11、CI 3.13.18）。困ったら `mise.lock` に移る
