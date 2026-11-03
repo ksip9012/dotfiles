@@ -42,8 +42,17 @@ mise run check        # lint・format・型チェック・速いテスト
 ```
 
 - CI を置くかの線引き: `personal-products/` は必須、`playground/` は任意（`../decisions/0004`）。置かないときは `.github/workflows/` を消す
-- 依存は `uv add <パッケージ>`（開発用は `uv add --dev`）。`uv.lock` はコミットする（CI でも同じ版を入れるため）
+- 依存は `uv add <パッケージ>`（開発用は `uv add --dev`）。`pyproject.toml` には下限だけ（`uv add` が書く `>=` の形）を書き、固定は `uv.lock` に任せる。`uv.lock` はコミットする（CI でも同じ版を入れるため）
 - 直すときは `mise run fix`（ruff の自動修正と format）
+
+## 版を上げる（`../decisions/0008`）
+
+| もの | いつ | どうやって |
+|---|---|---|
+| ライブラリと開発の道具（ruff・pyright・pytest など） | 作業を始めるとき（よく触るリポジトリは月 1回まで） | `mise run upgrade`（`uv lock --upgrade` → `mise run check`）。本来の作業とは別のコミットにする。落ちたらその場で直すか、そのライブラリだけ前の版に戻す（`uv lock --upgrade-package <名前>` で 1つずつ上げる手もある） |
+| プロジェクトの Python・uv | ひな形は毎年 11月。既存のリポジトリは触るとき | `mise.toml` を書き換える。uv を上げたら `uv_build` の範囲も、Python を上げたら `requires-python` も直す |
+| セキュリティの問題があるライブラリ | 問題が見つかったとき | Dependabot の自動の修正 PR をマージする |
+| mise 本体・プロジェクトの外の道具 | `mbrew` のたび | `brew upgrade` と `mise upgrade`（dotfiles の `mise/config.toml` は `latest`・`lts`） |
 
 ## メモ
 
