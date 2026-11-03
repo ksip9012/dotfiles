@@ -50,4 +50,8 @@ mise run check        # lint・format・型チェック・速いテスト
 - Python の版は `mise.toml` の `[tools]` だけで決める。uv が自分で Python を探さないよう、`[env]` で `UV_PYTHON_PREFERENCE = "only-system"` にしてある（入れないと、uv が mise とは別の版で仮想環境を作ることがあった。2026-11-03）
 - ruff の `RUF001`〜`RUF003`（全角の文字を止めるルール）は外してある。docstring やコメントを日本語で書くため
 - 型チェッカは pyright。ty が 1.0 になったら移るかを考える
-- CI の `MISE_TRUSTED_CONFIG_PATHS` は、CI の上で mise がリポジトリの `mise.toml` を読むため。ひな形を使った最初のリポジトリの CI で、これで動くかを確かめる
+- CI の `MISE_TRUSTED_CONFIG_PATHS` は、CI の上で mise がリポジトリの `mise.toml` を読むため（mise は信頼していない設定ファイルを読まない）
+- `uv sync` をしなくても、`mise run check` の最初の `uv run` が仮想環境を作って依存を入れる。CI はこれに頼っている
+- `pyproject.toml` は `readme = "README.md"` なので、README.md がないと uv がパッケージを作れない
+- ひな形を直したら、dotfiles の CI（`.github/workflows/templates.yml`）が、ひな形を写したサンプルで同じ手順を GitHub 上で動かして確かめる
+- `python = "3.13"` は 3.13 系の最新を入れるので、手元と CI で細かい版がずれることがある（2026-11-03 は手元 3.13.11、CI 3.13.18）

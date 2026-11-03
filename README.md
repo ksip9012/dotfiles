@@ -166,6 +166,7 @@ GitHub Actions で PR・main push 時に以下を自動検証する。
 | shellcheck | `install.sh` のシェルスクリプト検証 |
 | luacheck | `nvim/lua/` の Lua 構文チェック |
 | Brewfile syntax | `ruby -c Brewfile` で構文検証 |
+| python template | `templates/` を変えたときだけ。ひな形を写したサンプルで `mise run check` が通るか |
 
 ## トラブルシューティング
 
