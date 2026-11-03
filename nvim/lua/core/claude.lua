@@ -35,12 +35,19 @@ local function in_use(path)
   return false
 end
 
--- 未保存の変更がないファイルだけ読み込み直す（変更があると確認のプロンプトが出るため）
+-- 未保存の変更がないファイルだけ読み込み直す（変更があると確認のプロンプトが出るため）。
+-- ファイルが消えていたら読み直さない（E211 が出るため）。画面に出ていなければ閉じる
+-- （マージのあとに消した worktree のファイルなど）
 local function reload_unmodified()
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local name = vim.api.nvim_buf_get_name(buf)
     if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == ''
-        and not vim.bo[buf].modified and vim.api.nvim_buf_get_name(buf) ~= '' then
-      vim.cmd.checktime(buf)
+        and not vim.bo[buf].modified and name ~= '' then
+      if vim.uv.fs_stat(name) then
+        vim.cmd.checktime(buf)
+      elseif vim.fn.bufwinid(buf) == -1 then
+        vim.api.nvim_buf_delete(buf, {})
+      end
     end
   end
 end
