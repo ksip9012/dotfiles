@@ -1,0 +1,8 @@
+# Go
+# 依存・ビルドキャッシュ・go install したもの（mise.toml の [env] でここに置く）
+/.go/
+# go build -o bin/ で作ったもの
+/bin/
+# go test -c で作ったテストのバイナリと、カバレッジの結果
+*.test
+*.out

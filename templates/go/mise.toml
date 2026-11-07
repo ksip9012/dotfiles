@@ -1,0 +1,40 @@
+[tools]
+# 版の選び方: Go は最新のマイナー版。毎年 11月に見直す（decisions/0007）
+go = "1.27"
+# common の .pre-commit-config.yaml を動かすため（Python は開発用の依存で入るが、Go にはその仕組みがない）
+pre-commit = "4.7"
+
+[env]
+# go の依存・ビルドキャッシュ・install 先をこのプロジェクトの中に閉じ込める
+# （既定ではホームの ~/go や ~/Library/Caches/go-build に置かれる）
+GOPATH = "{{config_root}}/.go"
+GOCACHE = "{{config_root}}/.go/cache"
+GOBIN = "{{config_root}}/.go/bin"
+# go.mod の go の行を見て go が別の版を落としてこないようにし、上の [tools] の版だけを使う
+# （版を決める場所を mise.toml の 1か所にする）
+GOTOOLCHAIN = "local"
+
+# 手元・pre-commit・CI で同じチェックを動かす（decisions/0003）
+# gofmt は .go/ を外して見る。`gofmt -l .` だと .go/ の下の依存まで見てしまう
+# （go のコマンドの ./... は . で始まるフォルダを含めないので、vet と test はそのままでよい）
+[tasks.check]
+description = "format・vet・速いテスト"
+run = [
+  "test -z \"$(find . -path ./.go -prune -o -name '*.go' -print | xargs gofmt -l | tee /dev/stderr)\"",
+  "go vet ./...",
+  "go test -short ./...",
+]
+
+[tasks.fix]
+description = "format"
+run = "go fmt ./..."
+
+# ライブラリを上げる。作業を始めるときに、本来の作業とは別のコミットで回す
+# （よく触るリポジトリは月 1回まで。decisions/0008）
+[tasks.upgrade]
+description = "go.mod のライブラリを最新にしてチェックする"
+run = [
+  "go get -u -t ./...",
+  "go mod tidy",
+  "mise run check",
+]
