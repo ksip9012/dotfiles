@@ -152,7 +152,7 @@ python3 theme/generate.py
 
 | パス | 中身 |
 |---|---|
-| `templates/` | 新しいプロジェクトに置く土台。共通（`common/`: CI・`dependabot.yml`・pre-commit・`.gitignore`・ADR のテンプレート）と言語ごと（`python/`: `mise.toml`・`pyproject.toml` など）。使い方は `templates/README.md` |
+| `templates/` | 新しいプロジェクトに置く土台。共通（`common/`: CI・`dependabot.yml`・pre-commit・`.gitignore`・ADR のテンプレート）と言語ごと（`python/`: `mise.toml`・`pyproject.toml` など、`go/`: `mise.toml`・`go.mod` など）。使い方は `templates/README.md` |
 | `decisions/` | dotfiles の設計の決めごと（ADR。1決定 1ファイル） |
 
 チェック（lint・format・型チェック・テスト）は各プロジェクトの `mise.toml` の `[tasks.check]` に書き、手元・pre-commit・CI で同じ `mise run check` を動かす（`decisions/0003`）。
@@ -167,6 +167,7 @@ GitHub Actions で PR・main push 時に以下を自動検証する。
 | luacheck | `nvim/lua/` の Lua 構文チェック |
 | Brewfile syntax | `ruby -c Brewfile` で構文検証 |
 | python template | `templates/` を変えたときだけ。ひな形を写したサンプルで `mise run check` が通るか |
+| go template | python template と同じ（Go のひな形） |
 
 ## トラブルシューティング
 
@@ -199,3 +200,7 @@ rm ~/.cache/dotfiles/brewfile.sha256
 - 開発環境は `templates/python/` のひな形のとおり（mise + uv、ruff、pyright、pytest）
 - 型チェッカーには `pyright` を利用
 - `ty` が 1.0 になったら置き換えを考える
+
+### go
+
+- 開発環境は `templates/go/` のひな形のとおり（mise、gofmt・go vet・go test。依存とキャッシュはプロジェクトの `.go/` に閉じ込める）
