@@ -38,3 +38,28 @@ jobs:
       - name: mise run check
         working-directory: sample
         run: mise run check
+
+  go:
+    name: go template
+    runs-on: ubuntu-latest
+    env:
+      SAMPLE: ${{ github.workspace }}/sample
+      MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}/sample
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build sample project from templates
+        run: |
+          mkdir -p "$SAMPLE"
+          cp -R templates/common/. "$SAMPLE/"
+          cp -R templates/go/. "$SAMPLE/"
+          cat templates/common/.gitignore templates/go/.gitignore > "$SAMPLE/.gitignore"
+      - uses: jdx/mise-action@v5
+        with:
+          working_directory: sample
+      # mise.toml の [env] が効いているか（.go/ に閉じ込める・GOTOOLCHAIN=local）をログに残す
+      - name: Show go env
+        working-directory: sample
+        run: mise exec -- go env GOVERSION GOTOOLCHAIN GOPATH GOCACHE GOBIN
+      - name: mise run check
+        working-directory: sample
+        run: mise run check
