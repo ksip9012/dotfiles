@@ -31,6 +31,14 @@ link_file() {
     target_dir=$(dirname "$target_path")
     mkdir -p "$target_dir"
 
+    # 既存の実体のファイル・フォルダは消さずに退避する（シンボリックリンクはそのまま張り替える）
+    if [ -e "$target_path" ] && [ ! -L "$target_path" ]; then
+        local backup_path
+        backup_path="$target_path.backup.$(date +%Y%m%d%H%M%S)"
+        mv "$target_path" "$backup_path"
+        echo "📦 Backed up existing $target_path → $backup_path"
+    fi
+
     # Create the symlink
     # -s: symbolic
     # -f: force (overwrite)
