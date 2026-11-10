@@ -1,5 +1,5 @@
 [tools]
-# 版の選び方: Go は最新のマイナー版。毎年 11月に見直す（decisions/0007）
+# 版の選び方: Go は最新のマイナー版。毎年 11月に見直す（dotfiles の decisions/0007-language-versions）
 go = "1.27"
 # common の .pre-commit-config.yaml を動かすため（Python は開発用の依存で入るが、Go にはその仕組みがない）
 pre-commit = "4.7"
@@ -14,7 +14,7 @@ GOBIN = "{{config_root}}/.go/bin"
 # （版を決める場所を mise.toml の 1か所にする）
 GOTOOLCHAIN = "local"
 
-# 手元・pre-commit・CI で同じチェックを動かす（decisions/0003）
+# 手元・pre-commit・CI で同じチェックを動かす（dotfiles の decisions/0003-checks-in-mise-tasks）
 # gofmt は .go/ を外して見る。`gofmt -l .` だと .go/ の下の依存まで見てしまう
 # （go のコマンドの ./... は . で始まるフォルダを含めないので、vet と test はそのままでよい）
 [tasks.check]
@@ -30,7 +30,7 @@ description = "format"
 run = "go fmt ./..."
 
 # ライブラリを上げる。作業を始めるときに、本来の作業とは別のコミットで回す
-# （よく触るリポジトリは月 1回まで。decisions/0008）
+# （よく触るリポジトリは月 1回まで。dotfiles の decisions/0008-tool-and-library-upgrades）
 [tasks.upgrade]
 description = "go.mod のライブラリを最新にしてチェックする"
 run = [
