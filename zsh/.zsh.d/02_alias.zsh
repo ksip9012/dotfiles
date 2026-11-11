@@ -66,9 +66,9 @@ function _brew() {
   # 3. 状態の保存と健康診断
   # 最後に doctor を行うことで、今の構成に不備がないか確認します
   __brew_run_step "システム診断" "brew doctor"
-  # go は mise でプロジェクトごとにだけ入れているため、Go パッケージは書き出さない
+  # go・rust は mise でプロジェクトごとにだけ入れているため、Go・Cargo パッケージは書き出さない
   # （グローバルでは mise の shim がエラーになる）
-  __brew_run_step "Brewfile の更新" "brew bundle dump --file=\"$HOME/.dotfiles/Brewfile\" --force --no-go"
+  __brew_run_step "Brewfile の更新" "brew bundle dump --file=\"$HOME/.dotfiles/Brewfile\" --force --no-go --no-cargo"
 
   # 4. 30日以上前のログファイルを削除
   find "$log_dir" -name "brew_*.log" -type f -mtime +30 -delete
