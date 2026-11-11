@@ -206,3 +206,7 @@ rm ~/.cache/dotfiles/brewfile.sha256
 ### go
 
 - 開発環境は `templates/go/` のひな形のとおり（mise、gofmt・go vet・go test。依存とキャッシュはプロジェクトの `.go/` に閉じ込める）
+
+### rust
+
+- 開発環境は `templates/rust/` のひな形のとおり（mise、cargo fmt・clippy・cargo test。clippy と rustfmt は mise の components で入れる）
