@@ -1,0 +1,3 @@
+# Rust
+# ビルドの結果（cargo build・cargo test が作る）
+/target/

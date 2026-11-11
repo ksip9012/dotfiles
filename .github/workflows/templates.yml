@@ -63,3 +63,30 @@ jobs:
       - name: mise run check
         working-directory: sample
         run: mise run check
+
+  rust:
+    name: rust template
+    runs-on: ubuntu-latest
+    env:
+      SAMPLE: ${{ github.workspace }}/sample
+      MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}/sample
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build sample project from templates
+        run: |
+          mkdir -p "$SAMPLE"
+          cp -R templates/common/. "$SAMPLE/"
+          cp -R templates/rust/. "$SAMPLE/"
+          cat templates/common/.gitignore templates/rust/.gitignore > "$SAMPLE/.gitignore"
+      - uses: jdx/mise-action@v5
+        with:
+          working_directory: sample
+      # mise.toml の版と components（clippy・rustfmt）が入ったかをログに残す
+      - name: Show rust toolchain
+        working-directory: sample
+        run: |
+          mise exec -- rustup show active-toolchain
+          mise exec -- rustup component list --installed
+      - name: mise run check
+        working-directory: sample
+        run: mise run check
