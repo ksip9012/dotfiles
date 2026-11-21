@@ -191,13 +191,36 @@ local function leave_pinned()
   vim.cmd('belowright vsplit')
 end
 
+-- 今いる窓がファイルを開く窓でなければ（浮いた窓・NvimTree・quickfix など）、ファイルの窓へ移る。
+-- なければ右に新しい窓を作る。Lazy の画面などの浮いた窓にファイルを開いて、
+-- ほかの窓の上に重ねてしまわないため（#128）
+local function to_file_window()
+  local buf = vim.api.nvim_get_current_buf()
+  if vim.api.nvim_win_get_config(0).relative == '' and vim.bo[buf].buftype == ''
+      and vim.bo[buf].filetype ~= 'NvimTree' then
+    return
+  end
+  local wins = file_windows()
+  if #wins > 0 then
+    vim.api.nvim_set_current_win(wins[#wins])
+    return
+  end
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.api.nvim_win_get_config(win).relative == '' then
+      vim.api.nvim_set_current_win(win)
+      break
+    end
+  end
+  vim.cmd('botright vnew')
+end
+
 -- path を開き、line（関数なら開いた後に呼んで求める）の行へ移動する
 local function show(path, line, verb)
   if busy(path) then
     vim.notify('Claude: ' .. vim.fn.fnamemodify(path, ':~:.') .. ' を' .. verb .. 'ました')
     return
   end
-  if vim.bo.filetype == 'NvimTree' then vim.cmd.wincmd('p') end
+  to_file_window()
   if vim.fn.bufwinid(path) == -1 then leave_pinned() end
   local ok, err = pcall(vim.cmd.drop, vim.fn.fnameescape(path))
   if not ok then

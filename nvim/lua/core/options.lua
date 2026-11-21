@@ -57,15 +57,26 @@ vim.api.nvim_create_autocmd('FileType', {
 
 -- Markdown: 日本語の長い行を窓の中で読めるよう折り返す（単語の途中で切らず、箇条書きのインデントをそろえる）。
 -- Claude の変更を左右に並べて見るときに窓が狭くなるので、相対の行番号は出さず、左の列を細くする（#126）
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'markdown',
-  callback = function()
+-- 窓の設定なので、ファイルの種類が決まったときだけでなく、窓に出るたびに付ける。
+-- FileType だけだと、読み込み済みのファイルを別の窓に出したとき（Claude の並べ直しなど）や、
+-- 起動のときに渡したファイルの窓に付かない（#128）。起動のときの分は VimEnter で全部の窓に付け直す
+local function markdown_window(win)
+  if vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= 'markdown' then return end
+  vim.api.nvim_win_call(win, function()
     vim.opt_local.wrap = true
     vim.opt_local.linebreak = true
     vim.opt_local.breakindent = true
     vim.opt_local.breakindentopt = 'list:-1'
     vim.opt_local.relativenumber = false
     vim.opt_local.numberwidth = 3
+  end)
+end
+vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter' }, {
+  callback = function() markdown_window(vim.api.nvim_get_current_win()) end,
+})
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do markdown_window(win) end
   end,
 })
 
