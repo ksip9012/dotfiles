@@ -211,7 +211,9 @@ require('lazy').setup({
     ft = 'markdown',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
-      anti_conceal = { enabled = true },
+      -- 表の枠は、カーソルのある行でも描いたままにする（#130）。列をそろえる空白は ignore で
+      -- 残せない（プラグインの側で常に anti_conceal の対象）ので、その行の列のずれは残る
+      anti_conceal = { enabled = true, ignore = { table_border = true } },
       heading = { width = 'block', left_pad = 1, right_pad = 2 },
       code = { width = 'block', right_pad = 2 },
       pipe_table = { preset = 'round', wrap = false },
