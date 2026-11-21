@@ -59,6 +59,37 @@
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true
   },
+  "tui": "fullscreen",
+  "viewMode": "focus",
   "theme": "dark-ansi",
-  "tui": "fullscreen"
+  "autoMode": {
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Primary use of Claude Code**: personal GTD / life-management vault (journaling, task tracking, health logs) — not software development, though the repo also contains some skill-authoring and scripting",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: assume private — no remote is configured for this repo (`~/Documents/life`), so there is no public host/path to scope against; treat as a local-only private vault",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: None configured",
+      "**Default / protected branches**: not queryable — no remote configured for this repo; default branch unknown (origin/HEAD unset)",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured — ordinary developer machine, open internet observed (Open-Meteo, e-stat, GitHub raw content, Claude docs, TLDR, etc.)",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine with open internet",
+      "**Source control**: The trusted repo (`~/Documents/life`, no remote configured) only — no additional orgs configured",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: `logs/` (health data: sleep, resting heart rate, HRV, Body Battery, weight), `reviews/` and `gtd/` (personal journal entries, work-related reflections with company/project names redacted per policy), `me/` (personal values/goals — career & money topics marked as requiring confirmation before acting); share only with the user themselves",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: personal GTD vault management (daily/weekly reviews, inbox triage, morning briefs) under `~/Documents/life`, routine under this repo's prefix",
+      "**Trusted repo**: `~/Documents/life` (no remote configured — local-only); related personal repos observed on disk but not configured as remotes of this repo: `~/Documents/life-inbox` (github.com/ksip9012/life-inbox), `~/.dotfiles` (github.com/ksip9012/dotfiles), `~/.claude-skills` (github.com/ksip9012/agent-skills) — these are candidates only, not adopted as trusted scope since this repo has no remote linking them",
+      "**Org-specific CLIs**: None configured — additional CLIs noted as available per user's global CLAUDE.md: rg, fd, bat, eza, jq, fzf, zoxide, gh, rip",
+      "**Routine under this repo's prefix**: GTD file edits (`gtd/`, `reviews/`, `logs/`), skill-driven daily/weekly review commits, and `~/Documents/life-inbox` pull/push as part of inbox-triage are routine personal-vault operations"
+    ]
+  }
 }
