@@ -82,7 +82,7 @@ cask "font-jetbrains-mono"
 cask "font-meslo-lg-nerd-font"
 cask "font-monaspace"
 cask "font-terminess-ttf-nerd-font"
-# GIT client
+# Git client
 cask "fork"
 # Set of tools to manage resources and applications hosted on Google Cloud
 cask "gcloud-cli"
