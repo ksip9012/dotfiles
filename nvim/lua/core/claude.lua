@@ -109,6 +109,8 @@ function M.setup()
     { nargs = '?', complete = 'file', desc = 'Claude: このウィンドウ（またはファイル）を左に固定する' })
   vim.api.nvim_create_user_command('ClaudeUnpin', function() M.unpin() end,
     { desc = 'Claude: 左の固定を外す' })
+  vim.api.nvim_create_user_command('ClaudeChanges', function() M.changes() end,
+    { desc = 'Claude: 直前のターンに変わったファイルを一覧に出す' })
   vim.o.autoread = true
   vim.api.nvim_create_autocmd('FocusGained', {
     group = vim.api.nvim_create_augroup('ClaudeReload', { clear = true }),
@@ -252,7 +254,10 @@ end
 
 -- 返答の終わりに並べるのは、人が読むファイルだけ（機械が読むデータは並べない）
 local skip_ext = { jsonl = true, json = true, csv = true, tsv = true, lock = true, log = true }
-local max_windows = 4
+-- 並べるのは最後に変えた 2つまで。それ以上並べると、Claude Code と左右に並べたときに
+-- 1つの窓が小さくなりすぎる（#126）。ほかは :ClaudeChanges の一覧から開く
+local max_windows = 2
+local last_changed = {} -- 直前のターンに変わったファイル（並べなかった分も含む）
 
 -- このターンに変わったファイル（Edit/Write したもの + Bash などで変わったもの）を、変わった順に
 local function changed_files()
@@ -275,6 +280,7 @@ local function changed_files()
     end
   end
   table.sort(list, function(a, b) return a.mtime < b.mtime end)
+  last_changed = vim.tbl_map(function(item) return item.path end, list)
   local paths = {}
   for i = math.max(#list - max_windows + 1, 1), #list do table.insert(paths, list[i].path) end
   return paths, #list - #paths
@@ -418,7 +424,7 @@ function M.sync()
     end
     arrange(paths)
     if hidden > 0 then
-      vim.notify('Claude: ほかに ' .. hidden .. ' 個のファイルを変更しました（並べきれないので省略）')
+      vim.notify('Claude: ほかに ' .. hidden .. ' 個のファイルを変更しました（:ClaudeChanges で一覧）')
     end
   end)
   return ''
@@ -455,6 +461,21 @@ function M.pin(path)
     if #rights > 0 then fill_right(win, rights, false) else vim.cmd('wincmd =') end
   end)
   return ''
+end
+
+-- :ClaudeChanges から呼ばれる。直前のターンに変わったファイルを、新しい順に quickfix の一覧に出す
+function M.changes()
+  if #last_changed == 0 then
+    vim.notify('Claude: 直前のターンに変わったファイルはありません')
+    return
+  end
+  local items = {}
+  for i = #last_changed, 1, -1 do
+    local path = last_changed[i]
+    table.insert(items, { filename = path, lnum = first_changed_line(path) or 1, text = 'Claude が変更' })
+  end
+  vim.fn.setqflist({}, 'r', { title = 'Claude が変えたファイル', items = items })
+  vim.cmd('botright copen')
 end
 
 function M.unpin()
