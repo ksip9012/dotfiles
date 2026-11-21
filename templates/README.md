@@ -54,7 +54,7 @@ mise run check        # lint・format・型チェック・速いテスト
 
 - CI を置くかの線引き: `personal-products/` は必須、`playground/` は任意（`../decisions/0004`）。置かないときは `.github/workflows/` を消す
 - 依存は `uv add <パッケージ>`（開発用は `uv add --dev`）。`pyproject.toml` には下限だけ（`uv add` が書く `>=` の形）を書き、固定は `uv.lock` に任せる。`uv.lock` はコミットする（CI でも同じ版を入れるため）
-- 直すときは `mise run fix`（ruff の自動修正と format）
+- 直すときは `mise run fix`（ruff の自動修正と format。自動で直せないエラーがあっても format まで進み、残ったエラーを最後に出して失敗する）
 
 ## 使い方（Go の例）
 
