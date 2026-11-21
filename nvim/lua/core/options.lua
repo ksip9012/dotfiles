@@ -55,6 +55,20 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- Markdown: 日本語の長い行を窓の中で読めるよう折り返す（単語の途中で切らず、箇条書きのインデントをそろえる）。
+-- Claude の変更を左右に並べて見るときに窓が狭くなるので、相対の行番号は出さず、左の列を細くする（#126）
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+    vim.opt_local.breakindent = true
+    vim.opt_local.breakindentopt = 'list:-1'
+    vim.opt_local.relativenumber = false
+    vim.opt_local.numberwidth = 3
+  end,
+})
+
 -- 1. ファイル保存時に末尾の空白を削除する
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*" },
