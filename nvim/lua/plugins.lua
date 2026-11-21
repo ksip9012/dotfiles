@@ -204,6 +204,8 @@ require('lazy').setup({
   -- Markdown の見出し・表・チェックボックスを読みやすく表示する（#126）。
   -- パーサーは Neovim に入っている markdown・markdown_inline を使う。
   -- カーソルのある行は、元の書き方のまま見せる（Claude の変更をそのまま確かめられるように）
+  -- 窓に収まらない表は折り返さない。列の多い表（logs/ など）で仮想の行が数百行になり、
+  -- 表示の位置が描き直しのたびに動いてチカチカしたため（#130）
   {
     'MeanderingProgrammer/render-markdown.nvim',
     ft = 'markdown',
@@ -212,7 +214,7 @@ require('lazy').setup({
       anti_conceal = { enabled = true },
       heading = { width = 'block', left_pad = 1, right_pad = 2 },
       code = { width = 'block', right_pad = 2 },
-      pipe_table = { preset = 'round' },
+      pipe_table = { preset = 'round', wrap = false },
     },
   },
 })
