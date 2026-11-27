@@ -4,6 +4,7 @@
 #   nvim-follow.sh open … PostToolUse (Edit/Write): 編集したファイルを開き、変更した行へ移動する
 #   nvim-follow.sh view … PostToolUse (Read): プロジェクト内のテキストファイルを読んだら、読んだ位置を開く
 #   nvim-follow.sh mark … UserPromptSubmit: ターンの始まりを nvim に記録する
+#                         送り先がなく、ほかのディレクトリで nvim が動いていれば、起動し直すよう知らせる（1つの会話で1回）
 #   nvim-follow.sh sync … Stop: 開いているファイルを読み込み直し、Bash などで変わったファイルも開く
 #   nvim-follow.sh guard … PreToolUse (Bash): プロジェクト内のファイルを cat などで読むだけなら止め、Read を使わせる
 # 送り先の nvim:
@@ -17,7 +18,42 @@ if [ -z "$server" ]; then
     hash=$(printf '%s' "$project_dir" | shasum -a 256 | cut -c1-12)
     server="${XDG_STATE_HOME:-$HOME/.local/state}/nvim/claude/$hash.sock"
 fi
-[ -S "$server" ] || exit 0
+
+# 知らせたことの記録（会話ごと）。つながったら消し、また外れたときに知らせ直す
+notice_stamp() {
+    local session
+    session=$(jq -r '.session_id // empty' <<<"$input" 2>/dev/null)
+    [ -n "$session" ] || return 1
+    printf '%s/nvim-follow-noticed-%s' "${TMPDIR:-/tmp}" "$session"
+}
+
+# 送り先の nvim がないとき、ほかのディレクトリで nvim が動いていれば知らせる
+# （nvim を ~ などで起動すると、ソケットがそのディレクトリの名前で作られ、合図が届かない）
+notice_elsewhere() {
+    [ -z "$NVIM" ] || return 0
+    local stamp sock cwd=''
+    stamp=$(notice_stamp) || return 0
+    [ -e "$stamp" ] && return 0
+    for sock in "${server%/*}"/*.sock; do
+        [ -S "$sock" ] || continue
+        # 異常終了で残ったソケットは数えない
+        cwd=$(nvim --server "$sock" --remote-expr 'getcwd()' 2>/dev/null) && [ -n "$cwd" ] && break
+        cwd=''
+    done
+    [ -n "$cwd" ] || return 0
+    : >"$stamp"
+    local msg="Neovim が $cwd で起動しているため、Claude の作業を追いかけていません。追いかけるには、nvim を閉じて $project_dir で起動し直してください（:cd では切り替わりません）。"
+    jq -n --arg msg "$msg" '{systemMessage: $msg,
+        hookSpecificOutput: {hookEventName: "UserPromptSubmit", additionalContext: ("nvim-follow: " + $msg + " このことをユーザーへの返答で一言伝えてください。")}}'
+}
+
+if [ ! -S "$server" ]; then
+    if [ "$1" = mark ]; then
+        input=$(cat)
+        notice_elsewhere
+    fi
+    exit 0
+fi
 
 # Vim script の文字列リテラル用に ' を '' にエスケープして囲む
 quote() {
@@ -98,7 +134,11 @@ case "$1" in
             '{hookSpecificOutput: {hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: $reason}}'
         exit 0
         ;;
-    mark) expr="v:lua.require'core.claude'.mark()" ;;
+    mark)
+        input=$(cat)
+        stamp=$(notice_stamp) && rm -f "$stamp"
+        expr="v:lua.require'core.claude'.mark()"
+        ;;
     sync) expr="v:lua.require'core.claude'.sync()" ;;
     *) exit 0 ;;
 esac
