@@ -8,5 +8,6 @@ export VISUAL=nvim
 export HOMEBREW_CURLRC="${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/curlrc"
 
 # Terraform (XDG compliance)
-export TF_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/terraform"
-export TF_PLUGIN_CACHE_DIR="$TF_DATA_DIR/plugin-cache"
+# TF_DATA_DIR はプロジェクトごとの .terraform/ に任せる（共有すると backend の設定が混ざる、#139）
+# キャッシュのフォルダは Terraform が作らないので install.sh で作る
+export TF_PLUGIN_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/terraform/plugin-cache"

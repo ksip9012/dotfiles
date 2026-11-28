@@ -107,6 +107,11 @@ else
     rm -f "$tmp_terminfo"
 fi
 
+# --- Terraform plugin cache ---
+# TF_PLUGIN_CACHE_DIR（03_env.zsh）のフォルダは Terraform が自分では作らない（#139）
+TF_PLUGIN_CACHE_DIR="${XDG_CACHE_HOME:-$HOME_DIR/.cache}/terraform/plugin-cache"
+mkdir -p "$TF_PLUGIN_CACHE_DIR"
+
 # --- Link configuration files ---
 
 echo ""
